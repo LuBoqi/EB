@@ -1,55 +1,63 @@
-import pymysql
+import pandas as pd
 
 
-class user_data:
-    def __init__(self, username, password, ip='0.0.0.0'):
-        self.username = username
-        self.password = password
-        self.ip = ip
-        self.cnnect_to_database()
-
-        self.connection = pymysql.connect(host=self.ip,
-                                          user=self.username,  # 替换为您的MySQL用户名
-                                          password=self.password,  # 替换为您的MySQL密码
-                                          database='chat_database',  # 替换为您的数据库名称
-                                          charset='utf8mb4',
-                                          cursorclass=pymysql.cursors.DictCursor)
-        self.create_table()
-
-    def create_table(self):
-        with self.connection.cursor() as cursor:
-            # 创建用户表
-            create_table_query = """
-                            CREATE TABLE IF NOT EXISTS chat_logs (
-                                id INT AUTO_INCREMENT PRIMARY KEY,
-                                sender_id INT NOT NULL,
-                                receiver_id INT NOT NULL,
-                                message TEXT NOT NULL,
-                                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                            )
-                            """
-            cursor.execute(create_table_query)
-            self.connection.commit()
+class ChatLogs:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.df = pd.read_csv(file_path)
+        print(self.df)
 
     def insert_message(self, sender_id, receiver_id, message):
-        with self.connection.cursor() as cursor:
-            insert_query = """
-                            INSERT INTO chat_logs (sender_id, receiver_id, message)
-                            VALUES (%s, %s, %s)
-                            """
-            cursor.execute(insert_query, (sender_id, receiver_id, message))
-            self.connection.commit()
+        new_row = {'Sender_ID': sender_id, 'Receiver_ID': receiver_id, 'Message': message}
+        self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True, sort=False)
+        self.df.to_csv(self.file_path, index=False)
 
     def get_messages(self, sender_id, receiver_id):
-        with self.connection.cursor() as cursor:
-            select_query = """
-                            SELECT * FROM chat_logs
-                            WHERE (sender_id = %s AND receiver_id = %s)
-                                OR (sender_id = %s AND receiver_id = %s)
-                            """
-            cursor.execute(select_query, (sender_id, receiver_id, receiver_id, sender_id))
-            messages = cursor.fetchall()
-            return messages
+        messages = self.df[(self.df['Sender_ID'] == sender_id) & (self.df['Receiver_ID'] == receiver_id)]
+        return messages['Message'].tolist()
 
     def close_connection(self):
-        self.connection.close()
+        self.df.to_csv(self.file_path, index=False)
+
+
+class User_info:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.df = pd.read_csv(file_path)
+        print(self.df)
+
+    def insert_user(self, user_id, user_name, password):
+        new_row = {'User_ID': user_id, 'User_Name': user_name, 'Password': password}
+        self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True, sort=False)
+        self.df.to_csv(self.file_path, index=False)
+
+    def get_user(self, user_id, user_password):
+        user = self.df[self.df['User_ID'] == user_id]
+        if user.empty or user['Password'].iloc[0] != user_password:
+            print("User not found or incorrect password")
+            return None
+        return user
+
+    def close_connection(self):
+        self.df.to_csv(self.file_path, index=False)
+
+
+if __name__ == '__main__':
+    chat_logs = ChatLogs('chat_logs.csv')
+    chat_logs.insert_message(2, 1, 'Hi')
+    chat_logs.insert_message(1, 2, 'How are you?')
+    chat_logs.insert_message(2, 1, 'I am good, thank you!')
+
+    messages = chat_logs.get_messages(6, 2)
+    print(messages)
+
+    chat_logs.close_connection()
+
+    log_in = User_info('user_info.csv')
+    # log_in.insert_user(1, 'user1', 'password1')
+    # log_in.insert_user(2, 'user2', 'password2')
+    # log_in.insert_user(3, 'user3', 'password3')
+
+    user = log_in.get_user(1, 'password1')
+    print(user)
+    log_in.close_connection()
