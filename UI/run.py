@@ -1,6 +1,6 @@
 import sys
-from UI.chat import Ui_Form2
-from UI.log import Ui_Form
+from chat import Ui_Form2
+from log import Ui_Form
 
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5 import QtWidgets, QtCore, QtGui, Qt
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     mainWindow = QMainWindow()
 
     # ui = log.Ui_Form()
-    ui2=Ui_Form2()
+    ui2=Ui_Form()
     # 调用Ui_MainWindow类的setupUi，创建初始组件
     ui2.setupUi(mainWindow)
     # 创建窗口
