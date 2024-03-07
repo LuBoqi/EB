@@ -159,7 +159,6 @@ class Ui_Form2(object):
         self.pushButton_4.clicked.connect(Form.send_massage) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
@@ -180,4 +179,3 @@ class Ui_Form2(object):
         self.pushButton_6.setText(_translate("Form", "X"))
         self.pushButton_4.setText(_translate("Form", "发送"))
 import pictures_rc
-
