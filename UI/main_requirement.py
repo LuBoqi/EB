@@ -44,7 +44,15 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
 
 class Chat(QtWidgets.QMainWindow,Ui_Form2):
     # write chat code
+
+
+    def send_massage(self):
+        pass
+
+
     pass
+
+
 
 class Signup(QtWidgets.QMainWindow,Ui_Form3):
     def __init__(self):
