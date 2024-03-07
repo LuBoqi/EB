@@ -250,8 +250,42 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>sign_in()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>737</x>
+     <y>581</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>894</x>
+     <y>505</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>login()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>592</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>495</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exit()</slot>
+  <slot>sign_in()</slot>
+  <slot>login()</slot>
  </slots>
 </ui>

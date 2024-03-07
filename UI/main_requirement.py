@@ -90,7 +90,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     # ui = log.Ui_Form()
-    ui2=Signup()
+    ui2=Login()
     # 调用Ui_MainWindow类的setupUi，创建初始组件
     ui2.show()
     # 进入程序的主循环，并通过exit函数确保主循环安全结束
