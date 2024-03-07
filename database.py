@@ -32,6 +32,7 @@ class User_info:
         self.df.to_csv(self.file_path, index=False)
 
     def get_user(self, user_id, user_password):
+        user_id = eval(user_id)
         user = self.df[self.df['User_ID'] == user_id]
         if user.empty or user['Password'].iloc[0] != user_password:
             print("User not found or incorrect password")

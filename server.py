@@ -1,5 +1,7 @@
 import socket
 import threading
+from database import ChatLogs, User_info
+from message import Message
 
 
 class Server(object):
@@ -8,15 +10,35 @@ class Server(object):
         self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((ip, port))
+        self.chat_logs = ChatLogs('chat_logs.csv')
+        self.log_in = User_info('user_info.csv')
+        self.msg = Message('server')
 
     def handle_client(self, client_socket, client_address):
         print("连接来自:", client_address)
+        client_name = ':'.join(str(item) for item in client_address)
+        this_msg = Message(client_name)
+        land_error_time = 1
         try:
             while True:
-                received_data = client_socket.recv(1024)
-                print("接收到来自{}的消息: {}".format(client_address, received_data.decode()))
-                # 假设服务器要回复客户端
-                client_socket.sendall('Server received your message.'.encode())
+                if land_error_time > 5:  # 密码输错5次就关闭链接
+                    client_socket.sendall(self.msg.en_code('server', client_name, '密码错误！！！'))
+                    client_socket.close()
+                    break
+                received_data = client_socket.recv(1024).decode()
+                received_data = [data for data in received_data.split('\r\n\r\n') if data]
+                for pack in received_data:
+                    this_msg.de_code(pack)
+                    if this_msg.receiver == 'server':
+                        result = self.log_in.get_user(this_msg.sender, this_msg.content) is not None
+                        if not result:
+                            land_error_time = land_error_time + 1
+                        print('{}时刻{}使用密码{}'.format(this_msg.time, this_msg.sender, this_msg.content))
+                        client_socket.sendall(self.msg.en_code('server', client_name, str(result)))
+                    else:
+                        print('{}时刻{}向{}发送{}'.format(this_msg.time, this_msg.sender,
+                                                          this_msg.receiver, this_msg.content))
+
         except Exception as e:
             print("Error:", e)
         finally:

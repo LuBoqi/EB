@@ -1,3 +1,4 @@
+import message
 from message import Message
 import socket
 import time
@@ -7,15 +8,30 @@ class Client:
     def __init__(self, server_ip, port):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((server_ip, port))
+        self.id = input('input user:')
+        self.pwd = input('input password:')
+        self.now_msg = Message(self.id)
 
-    def land(self, name, pwd):
-        self.client_socket.sendall('land'.encode())
+    def login(self):
+        self.client_socket.sendall(self.now_msg.en_code(self.id, 'server', self.pwd))
+        print('try login...')
+        feedback = self.client_socket.recv(1024).decode()
+        feedback = [data for data in feedback.split('\r\n\r\n') if data]
+        for pack in feedback:
+            self.now_msg.de_code(pack)
+            if self.now_msg.sender == 'server':
+                print('登陆结果:', self.now_msg.content)
+                if self.now_msg.content != 'True':
+                    self.pwd = input('请重新输入密码：')
+                    return False
+        return True
 
-    def send(self, msg):
-        self.client_socket.send(msg.encode())
+    def send(self, receiver, msg):
+        self.client_socket.send(self.now_msg.en_code(self.id, receiver, msg))
+        print('sending...')
 
     def receive(self):
-        return client.client_socket.recv(1024).decode()
+        return self.client_socket.recv(1024).decode()
 
     def close(self):
         # 关闭连接
@@ -24,8 +40,12 @@ class Client:
 
 if __name__ == '__main__':
     client = Client('127.0.0.1', 8989)
+    have_login = False
     while True:
-        client.land('admin', 'admin')
-        client.send(str(time.time()))
-        print(client.receive())
-        time.sleep(1)
+        if not have_login:
+            have_login = client.login()
+        elif client.id == '0':
+            print('欢迎进入管理员帐号')
+        else:
+            client.send('admin', message.get_time_string())
+        time.sleep(0.1)
