@@ -37,7 +37,7 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
 
     def exit(self):
         self.close()
-        #客户端退出代码
+        #需要客户端退出代码
 
 
 
