@@ -27,9 +27,9 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
     #   判断用户名和密码是否存在或正确
     #   write code here
     #   连接成功使用
-    #   self.ui1 = Chat()
-    #   self.ui1.show()
-    #   self.close()
+        self.ui1 = Chat()
+        self.ui1.show()
+        self.close()
 
     def sign_up(self):
         self.ui2 = Signup()
@@ -46,8 +46,50 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
     # write chat code
 
 
-    def send_massage(self):
+
+    def __init__(self):
+        super(Chat, self).__init__()
+        self.setupUi(self)
+        self.load_massage()
+
+    def load_massage(self):
+        # 加载数据库
+        # try:
+            # for i in range(10):
+            #     self.textBrowser.append(load_username + ':' + load_msg)
+        # expect:
+        #     box.warning(self, '提示', '更新失败')
+        #     self.close() 更新错误可直接关掉
         pass
+
+    def new_info(self):
+        # 更新在线人列表
+        # write code here
+        pass
+
+    def recv_massage(self):
+        # 接收消息并且显示在textBrowser
+        # receive code write here
+        # 接收完成后使用以下代码
+
+        # recv_username
+        # self.textBrowser.append(recv_username + ':' + recv_msg)
+
+        pass
+
+    def send_massage(self):
+        try:
+            req = self.textEdit.toPlainText()
+            if req:
+                reqs = '我' + ':' + req
+                self.textBrowser.append(reqs)
+                self.textEdit.clear()
+                # 发送消息代码 write here
+        #         写入数据库聊天记录代码 write here
+
+        except Exception as e:
+            print(e)
+
 
 
     pass
