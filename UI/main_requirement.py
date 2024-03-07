@@ -89,15 +89,9 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
-
-    # 创建对象
-    mainWindow = QMainWindow()
-
     # ui = log.Ui_Form()
-    ui2=Ui_Form3()
+    ui2=Signup()
     # 调用Ui_MainWindow类的setupUi，创建初始组件
-    ui2.setupUi(mainWindow)
-    # 创建窗口
-    mainWindow.show()
+    ui2.show()
     # 进入程序的主循环，并通过exit函数确保主循环安全结束
     sys.exit(app.exec_())
