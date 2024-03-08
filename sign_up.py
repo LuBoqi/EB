@@ -70,6 +70,7 @@ class Ui_Form3(object):
 
         self.retranslateUi(Form)
         self.pushButton_2.clicked.connect(Form.exit) # type: ignore
+        self.pushButton.clicked.connect(Form.signup)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
