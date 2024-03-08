@@ -5,15 +5,17 @@ import time
 
 
 class Client:
-    def __init__(self, server_ip, port, id, pwd):
+    def __init__(self, server_ip, port):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((server_ip, port))
+        self.id = None
+        self.pwd = None
+        self.now_msg = Message(self.id)
+        self.send_msg = Message(self.id)
+
+    def login(self, id, pwd):
         self.id = id
         self.pwd = pwd
-        self.now_msg = Message(self.id)
-
-
-    def login(self):
         self.client_socket.sendall(self.now_msg.en_code(self.id, 'server', self.pwd))
         print('try login...')
         feedback = self.client_socket.recv(1024).decode()
@@ -39,14 +41,14 @@ class Client:
         self.client_socket.close()
 
 
-# if __name__ == '__main__':
-#     client = Client('127.0.0.1', 8989)
-#     have_login = False
-#     while True:
-#         if not have_login:
-#             have_login = client.login()
-#         elif client.id == '0':
-#             print('欢迎进入管理员帐号')
-#         else:
-#             client.send('admin', message.get_time_string())
-#         time.sleep(0.1)
+if __name__ == '__main__':
+    client = Client('127.0.0.1', 8989)
+    have_login = False
+    while True:
+        if not have_login:
+            have_login = client.login('0', 'admin')
+        elif client.id == '0':
+            print('欢迎进入管理员帐号')
+        else:
+            client.send('admin', message.get_time_string())
+        time.sleep(0.1)
