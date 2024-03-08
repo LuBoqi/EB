@@ -41,7 +41,7 @@ class Client:
         self.client_socket.close()
 
 
-if __name__ == '__main__':
+def main():
     client = Client('127.0.0.1', 8989)
     have_login = False
     while True:

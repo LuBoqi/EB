@@ -6,6 +6,7 @@ import re
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
 import client
+from client import Client
 import message
 import time
 
@@ -18,6 +19,7 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
     def __init__(self):
         super(Login, self).__init__()
         self.setupUi(self)
+        self.Client = Client(ip,port)
 
     def login(self):
         box=QtWidgets.QMessageBox()
@@ -26,26 +28,16 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
     #   判断用户名和密码是否存在或正确
     #   write code here
     #   连接成功使用以下代码
-        self.ui1 = Chat()
-        self.ui1.show()
-        self.close()
-        client.main(ip,port,user_name,password)
-    #     clt=client.Client(ip,port,user_name,password)
-    #     have_login = False
-    #     while True:
-    #         if not have_login:
-    #             have_login = clt.login()
-    #         elif clt.id == '0':
-    #             box.text('欢迎进入管理员帐号')
-    #             print('欢迎进入管理员帐号')
-    #             self.ui1 = Chat()
-    #             self.ui1.show()
-    #             self.close()
-    #         else:
-    #             print("登录失败")
-    #             clt.send('admin', message.get_time_string())
-    #
-    #         time.sleep(0.1)
+
+        if self.Client.login(user_name,password):
+            self.ui1 = Chat()
+            self.ui1.show()
+            self.close()
+            box.setText("登录成功")
+        else:
+            self.close()
+            box.setText("用户名或密码错误")
+
 
 
     def sign_up(self):
