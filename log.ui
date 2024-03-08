@@ -26,13 +26,13 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(:/background/whitebackground.jpg);</string>
+    <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
    </property>
    <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
+    <enum>QFrame::Plain</enum>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -73,7 +73,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>校徽.jpg</pixmap>
+          <pixmap>UI/校徽.jpg</pixmap>
          </property>
         </widget>
        </item>

@@ -26,9 +26,6 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
         user_name=self.lineEdit_3.text()  #用户名
         password=self.lineEdit.text()   #密码
     #   判断用户名和密码是否存在或正确
-    #   write code here
-    #   连接成功使用以下代码
-
         if self.Client.login(user_name,password):
             self.ui1 = Chat()
             self.ui1.show()
@@ -46,9 +43,7 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
 
     def exit(self):
         self.close()
-        # client.Client.close()
-        #需要客户端退出代码
-
+        Client.close()
 
 class Chat(QtWidgets.QMainWindow,Ui_Form2):
     # write chat code
@@ -57,6 +52,7 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
         super(Chat, self).__init__()
         self.setupUi(self)
         self.load_massage()
+        self.new_info()
 
     def load_massage(self):
         # 加载数据库
@@ -70,7 +66,14 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
 
     def new_info(self):
         # 更新在线人列表
+        list_f=[]   #好友列表
+        list_n=['张三','李四','王五','赵六','钱七','孙八','周九','吴十','郑十一','王十二'] #在线列表
+        for i in list_n:
+            self.listWidget.addItem(i)
+
         # write code here
+
+
         pass
 
     def recv_massage(self):
