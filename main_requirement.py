@@ -9,6 +9,7 @@ import client
 from client import Client
 import message
 import time
+import database
 
 ip='127.0.0.1'
 port=8989
@@ -106,6 +107,7 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
     def __init__(self):
         super(Signup, self).__init__()
         self.setupUi(self)
+        self.user_info = database.User_info("./user_info.csv")
 
     def signup(self):
         try:
@@ -134,7 +136,10 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
                 user['user_name']=user_name
                 user['password']=password
                 print(user)
-        #   需添加写入注册代码
+                # self.user_info.insert_user(user_id=user['user_name'] , user_name=user['nick_name'],password=user['password'])
+                self.close()
+                #   需添加写入注册代码
+
 
         except:
             box.warning(self, '提示', '注册失败')
