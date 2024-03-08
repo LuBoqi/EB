@@ -25,7 +25,6 @@ class Client:
             if self.now_msg.sender == 'server':
                 print('登陆结果:', self.now_msg.content)
                 if self.now_msg.content != 'True':
-                    self.pwd = input('请重新输入密码：')
                     return False
         return True
 
