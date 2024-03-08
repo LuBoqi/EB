@@ -39,19 +39,7 @@ class User_info:
         self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True, sort=False)
         self.df.to_csv(self.file_path, index=False)
 
-    def ID_check(self, user_id):
-        user_id = eval(user_id)
-        if any(self.df['User_ID'] == user_id):
-            print("ID have save!")
-            return False
-        else:
-            return True
 
-    def ID_sign_up(self, user_id, user_name, password):
-        if self.ID_check(user_id):
-            self.insert_user(self, user_id, user_name, password)
-        else:
-            return None
 
     def get_user(self, user_id, user_password):
         user_id = eval(user_id)
@@ -111,24 +99,24 @@ if __name__ == '__main__':
     #
     # chat_logs.close_connection()
     #
-    # log_in = User_info('user_info.csv')
-    # # log_in.insert_user(1, 'user1', 'password1')
+    log_in = User_info('user_info.csv')
+    log_in.ID_sign_up('1', 'user1', 'password1')
     # # log_in.insert_user(2, 'user2', 'password2')
     # # log_in.insert_user(3, 'user3', 'password3')
     #
     # user = log_in.get_user(1, 'password1')
     # print(user)
     # log_in.close_connection()
-    friends = Friend_list('friend_list.csv')
-    friends.insert_friend("1", "sam")
-    friends.insert_friend("1", "sam")
-    friends.insert_friend("2", "john")
-    friends.insert_friend("3", "tom")
-    friends.insert_friend("4", "jerry")
-    friends.insert_friend("1", "jim")
-    friends.insert_friend("1", "Daming")
-    friend = friends.get_friends("1")
-    print(friend)
-    friends.delete_friend("1", "sam")
-    friend = friends.get_friends("1")
-    print(friend)
+    # friends = Friend_list('friend_list.csv')
+    # friends.insert_friend("1", "sam")
+    # friends.insert_friend("1", "sam")
+    # friends.insert_friend("2", "john")
+    # friends.insert_friend("3", "tom")
+    # friends.insert_friend("4", "jerry")
+    # friends.insert_friend("1", "jim")
+    # friends.insert_friend("1", "Daming")
+    # friend = friends.get_friends("1")
+    # print(friend)
+    # friends.delete_friend("1", "sam")
+    # friend = friends.get_friends("1")
+    # print(friend)
