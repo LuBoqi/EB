@@ -2,6 +2,9 @@
   <qresource prefix="school badge&#xa;&#xa;">
     <file>校徽.jpg</file>
   </qresource>
+  <qresource prefix="back">
+    <file>校徽.jpg</file>
+  </qresource>
   <qresource prefix="background">
     <file>whitebackground.jpg</file>
   </qresource>

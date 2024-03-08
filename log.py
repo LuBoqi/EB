@@ -36,9 +36,7 @@ class Ui_Form(object):
         self.label_2.setMinimumSize(QtCore.QSize(50, 0))
         self.label_2.setStyleSheet("")
         self.label_2.setText("")
-        self.label_2.setPixmap(QtGui.QPixmap(":/school badge\n"
-"\n"
-"/校徽.jpg"))
+        self.label_2.setPixmap(QtGui.QPixmap("UI/校徽.jpg"))
         self.label_2.setObjectName("label_2")
         self.horizontalLayout.addWidget(self.label_2)
         self.label = QtWidgets.QLabel(self.layoutWidget)
@@ -105,8 +103,8 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         self.pushButton_2.clicked.connect(Form.exit) # type: ignore
-        self.pushButton.clicked.connect(Form.sign_up) # type: ignore
         self.pushButton_3.clicked.connect(Form.login) # type: ignore
+        self.pushButton.clicked.connect(Form.sign_up) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -118,3 +116,4 @@ class Ui_Form(object):
         self.pushButton_3.setText(_translate("Form", "登录"))
         self.pushButton.setText(_translate("Form", "注册账号"))
         self.pushButton_2.setText(_translate("Form", "X"))
+import pictures_rc

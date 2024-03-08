@@ -1,12 +1,16 @@
 import sys
-from UI.chat import Ui_Form2
-from UI.log import Ui_Form
-from UI.sign_up import Ui_Form3
+from chat import Ui_Form2
+from log import Ui_Form
+from sign_up import Ui_Form3
 import re
-from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication
 import client
-import socket
+import message
+import time
+
+ip='127.0.0.1'
+port=8989
 
 class Login(QtWidgets.QMainWindow,Ui_Form):
     ui1 = ''
@@ -22,9 +26,23 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
     #   判断用户名和密码是否存在或正确
     #   write code here
     #   连接成功使用以下代码
-        self.ui1 = Chat()
-        self.ui1.show()
-        self.close()
+        clt=client.Client(ip,port,user_name,password)
+        have_login = False
+        while True:
+            if not have_login:
+                have_login = clt.login()
+            elif clt.id == '0':
+                box.text('欢迎进入管理员帐号')
+                print('欢迎进入管理员帐号')
+                self.ui1 = Chat()
+                self.ui1.show()
+                self.close()
+            else:
+                print("登录失败")
+                clt.send('admin', message.get_time_string())
+
+            time.sleep(0.1)
+
 
     def sign_up(self):
         self.ui2 = Signup()
@@ -32,15 +50,12 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
 
     def exit(self):
         self.close()
+        # client.Client.close()
         #需要客户端退出代码
-
-
 
 
 class Chat(QtWidgets.QMainWindow,Ui_Form2):
     # write chat code
-
-
 
     def __init__(self):
         super(Chat, self).__init__()
