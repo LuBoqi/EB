@@ -39,14 +39,14 @@ class Client:
         self.client_socket.close()
 
 
-# if __name__ == '__main__':
-#     client = Client('127.0.0.1', 8989)
-#     have_login = False
-#     while True:
-#         if not have_login:
-#             have_login = client.login()
-#         elif client.id == '0':
-#             print('欢迎进入管理员帐号')
-#         else:
-#             client.send('admin', message.get_time_string())
-#         time.sleep(0.1)
+def main(ip,port,user_name,password):
+    client = Client(ip,port,user_name,password)
+    have_login = False
+    while True:
+        if not have_login:
+            have_login = client.login()
+        elif client.id == '0':
+            print('欢迎进入管理员帐号')
+        else:
+            client.send('admin', message.get_time_string())
+        time.sleep(0.1)
