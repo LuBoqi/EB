@@ -26,22 +26,26 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
     #   判断用户名和密码是否存在或正确
     #   write code here
     #   连接成功使用以下代码
-        clt=client.Client(ip,port,user_name,password)
-        have_login = False
-        while True:
-            if not have_login:
-                have_login = clt.login()
-            elif clt.id == '0':
-                box.text('欢迎进入管理员帐号')
-                print('欢迎进入管理员帐号')
-                self.ui1 = Chat()
-                self.ui1.show()
-                self.close()
-            else:
-                print("登录失败")
-                clt.send('admin', message.get_time_string())
-
-            time.sleep(0.1)
+        self.ui1 = Chat()
+        self.ui1.show()
+        self.close()
+        client.main(ip,port,user_name,password)
+    #     clt=client.Client(ip,port,user_name,password)
+    #     have_login = False
+    #     while True:
+    #         if not have_login:
+    #             have_login = clt.login()
+    #         elif clt.id == '0':
+    #             box.text('欢迎进入管理员帐号')
+    #             print('欢迎进入管理员帐号')
+    #             self.ui1 = Chat()
+    #             self.ui1.show()
+    #             self.close()
+    #         else:
+    #             print("登录失败")
+    #             clt.send('admin', message.get_time_string())
+    #
+    #         time.sleep(0.1)
 
 
     def sign_up(self):
