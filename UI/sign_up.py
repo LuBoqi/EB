@@ -9,8 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor, QColor
+
 
 class Ui_Form3(object):
     def setupUi(self, Form):
@@ -82,4 +81,3 @@ class Ui_Form3(object):
         self.label_7.setText(_translate("Form", "注册账号"))
         self.pushButton.setText(_translate("Form", "注册"))
         self.pushButton_2.setText(_translate("Form", "X"))
-import pictures_rc

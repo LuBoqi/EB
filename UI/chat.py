@@ -178,4 +178,3 @@ class Ui_Form2(object):
         self.pushButton_5.setText(_translate("Form", "-"))
         self.pushButton_6.setText(_translate("Form", "X"))
         self.pushButton_4.setText(_translate("Form", "发送"))
-import pictures_rc

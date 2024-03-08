@@ -118,4 +118,3 @@ class Ui_Form(object):
         self.pushButton_3.setText(_translate("Form", "登录"))
         self.pushButton.setText(_translate("Form", "注册账号"))
         self.pushButton_2.setText(_translate("Form", "X"))
-import pictures_rc

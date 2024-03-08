@@ -1,15 +1,10 @@
 import sys
-from chat import Ui_Form2
-from log import Ui_Form
-from sign_up import Ui_Form3
-
+from UI.chat import Ui_Form2
+from UI.log import Ui_Form
+from UI.sign_up import Ui_Form3
 import re
-from PyQt5.QtWidgets import QApplication,QMainWindow
-from PyQt5 import QtWidgets, QtCore, QtGui, Qt
-from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QApplication
+from PyQt5 import QtWidgets
 import client
 import socket
 
@@ -26,7 +21,7 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
         password=self.lineEdit.text()   #密码
     #   判断用户名和密码是否存在或正确
     #   write code here
-    #   连接成功使用
+    #   连接成功使用以下代码
         self.ui1 = Chat()
         self.ui1.show()
         self.close()
@@ -134,14 +129,3 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
             box.warning(self, '提示', '注册失败')
     def exit(self):
         self.close()
-
-
-if __name__ == '__main__':
-
-    app = QApplication(sys.argv)
-    # ui = log.Ui_Form()
-    ui2=Login()
-    # 调用Ui_MainWindow类的setupUi，创建初始组件
-    ui2.show()
-    # 进入程序的主循环，并通过exit函数确保主循环安全结束
-    sys.exit(app.exec_())
