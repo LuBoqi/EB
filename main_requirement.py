@@ -1,19 +1,13 @@
-import sys
 from multiprocessing import Process
-
 from chat import Ui_Form2
 from log import Ui_Form
 from sign_up import Ui_Form3
 import re
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import *
-from PyQt5.QtWidgets import QApplication
-import threading
-from concurrent.futures import ThreadPoolExecutor
 from client import Client
 import message
 import time
-import database
 from server import cmd
 
 server_ip = '127.0.0.1'
@@ -39,10 +33,9 @@ class Login(QtWidgets.QMainWindow, Ui_Form):
             box.warning(self, '错误', "用户名或密码不能为空")
         elif self.Client.login(user_name, password):
             self.ui1 = Chat(self.Client)
-            self.ui1_refresh = Worker(self.ui1.ui_refresh)
             self.ui1.show()
-            self.ui1_refresh.start()
             self.close()
+            self.ui1.go()
         else:
             self.lineEdit.clear()
             box.warning(self, '错误', "用户名或密码错误")
@@ -66,20 +59,30 @@ class Worker(QThread):
 
 
 class Chat(QtWidgets.QMainWindow, Ui_Form2):
-    # write chat code
 
-    def run(self):
-        self.ui_refresh()
+    def go(self):
+        self.rec = Worker(self.receive)
+        # self.rec = Process(target=self.Client.receive)
+        # self.fri = Worker(self.Client.get_friends)
+        # self.fri = Process(target=self.Client.get_friends)
+        self.uiRefresh = Worker(self.ui_refresh)
+        # self.uiRefresh = Process(target=self.ui_refresh)
+        self.rec.start()
+        # self.fri.start()
+        self.uiRefresh.start()
+        # self.rec.start()
+        # self.fri.start()
+        # self.uiRefresh.start()
 
     def __init__(self, client):
         super(Chat, self).__init__()
         self.setupUi(self)
         self.load_massage()
         self.Client = client
-        self.recv_massage = Worker(self.Client.receive)
-        self.get_friends = Worker(self.Client.get_friends)
-        self.recv_massage.start()
-        self.get_friends.start()
+        # self.recv_massage = Worker(self.Client.receive)
+        # self.get_friends = Worker(self.Client.get_friends)
+        # self.recv_massage.start()
+        # self.get_friends.start()
         self.new_info()
 
     def load_massage(self):
@@ -94,13 +97,9 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
         pass
 
     def new_info(self):
-        # 更新在线人列表
-        list_f = []  # 好友列表
-        list_n = self.Client.friends  # 在线列表
         self.listWidget.clear()
-        for i in list_n:
+        for i in self.Client.friends:
             self.listWidget.addItem(i)
-
 
     def ui_refresh(self):
         last_time = message.get_time_string()
@@ -110,6 +109,11 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
                     self.Client.now_msg.sender + '(' + self.Client.now_msg.time + ')' + ':' + self.Client.now_msg.content)
                 last_time = self.Client.now_msg.time
 
+    def receive(self):
+        while True:
+            self.Client.receive()
+            if self.Client.now_msg.sender == 'friends':
+                self.new_info()
     def send_massage(self):
         try:
             req = self.textEdit.toPlainText()
