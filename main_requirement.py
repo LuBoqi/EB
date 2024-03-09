@@ -4,14 +4,15 @@ from log import Ui_Form
 from sign_up import Ui_Form3
 import re
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QApplication
-import client
+import threading
 from client import Client
 import message
 import time
 import database
 
-server_ip ='10.24.41.5'
+server_ip ='127.0.0.1'
 port=8989
 
 class Login(QtWidgets.QMainWindow,Ui_Form):
@@ -26,6 +27,7 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
         box=QtWidgets.QMessageBox()
         user_name=self.lineEdit_3.text()  #用户名
         password=self.lineEdit.text()   #密码
+        print(user_name,password)
     #   判断用户名和密码是否存在或正确
         if self.Client.login(user_name,password):
             self.ui1 = Chat()
@@ -34,7 +36,7 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
             box.setText("登录成功")
         else:
             self.lineEdit.clear()
-            box.warning('错误',"用户名或密码错误")
+            box.warning(self,'错误',"用户名或密码错误")
 
 
 
@@ -59,7 +61,7 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
         # 加载数据库
         # try:
             # for i in range(10):
-            #     self.textBrowser.append(load_username + ':' + load_msg)
+            #     self.textBrowser.append(load_username +'('+str(Time)+')'+ ':' + load_msg)
         # expect:
         #     box.warning(self, '提示', '更新失败')
         #     self.close() 更新错误可直接关掉
@@ -83,7 +85,9 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
         # 接收完成后使用以下代码
 
         # recv_username
-        # self.textBrowser.append(recv_username + ':' + recv_msg)
+        # Time
+        # recv_msg
+        # self.textBrowser.append(recv_username + '('+str(Time)+')' + ':' + recv_msg)
 
         pass
 
@@ -91,7 +95,8 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
         try:
             req = self.textEdit.toPlainText()
             if req:
-                reqs = '我' + ':' + req
+                Time=time.strftime("%H:%M:%S", time.localtime())
+                reqs = '我 ' + '('+str(Time) +')' +':' + req
                 self.textBrowser.append(reqs)
                 self.textEdit.clear()
                 # 发送消息代码 write here
@@ -104,7 +109,8 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
 
     pass
 
-
+# class Thread:
+#     def __init__(self,dict):
 
 class Signup(QtWidgets.QMainWindow,Ui_Form3):
     def __init__(self):

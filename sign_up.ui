@@ -209,8 +209,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form3</receiver>
+   <slot>signup()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>381</x>
+     <y>466</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>669</x>
+     <y>428</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exit()</slot>
+  <slot>signup()</slot>
  </slots>
 </ui>
