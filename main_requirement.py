@@ -110,7 +110,7 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
     def __init__(self):
         super(Signup, self).__init__()
         self.setupUi(self)
-        self.client = Client(server_server_ip,port)
+        self.client = Client(server_ip,port)
 
     def signup(self):
         try:
