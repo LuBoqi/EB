@@ -16,6 +16,7 @@ class Client:
         self.now_msg = Message(self.id)
         self.send_msg = Message(self.id)
         self.friends = []
+        self.online_friends = []
         self.chat_logs = ChatLogs('chat_logs.csv')
 
     def login(self, id, pwd):
@@ -68,7 +69,7 @@ class Client:
     def close(self):
         self.client_socket.close()
 
-    def get_friends(self):  # 推荐参照'__main__'使用线程刷新，后续添加在线人员判定于此函数
+    def get_friends(self):
         try:
             while True:
                 self.send('friends', self.pwd)
@@ -101,7 +102,7 @@ if __name__ == '__main__':
     have_login = False
     while True:
         if not have_login:
-            have_login = client.login('1', 'password1')
+            have_login = client.login('1', 'password')
         elif client.id == '0':
             print('欢迎进入管理员帐号')
         else:

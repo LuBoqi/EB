@@ -38,6 +38,7 @@ class Server(object):
                         if not result:
                             land_error_time = land_error_time + 1
                         else:
+                            client_name = this_msg.sender
                             self.clients.append([client_socket, this_msg.sender])
                         print('{}时刻{}使用密码{}'.format(this_msg.time, this_msg.sender, this_msg.content))
                         client_socket.sendall(self.msg.en_code('password', client_name, str(result)))
@@ -75,6 +76,8 @@ class Server(object):
                                     break
         except Exception as e:
             print("Error:", e)
+            self.clients = [client for client in self.clients if client[1] != client_name]
+            client_socket.close()
         finally:
             # 关闭客户端连接
             client_socket.close()
