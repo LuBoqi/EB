@@ -104,10 +104,10 @@ if __name__ == '__main__':
     chat_logs = ChatLogs('chat_logs.csv')
     user_info = User_info('user_info.csv')
     friend_list = Friend_list("friend_list.csv")
-    # chat_logs.insert_message('1','1','213','4')
-    # chat_logs.insert_message('1','1','213','4')
-    # chat_logs.insert_message('1','1','213','4')
-    # chat_logs.insert_message('123','234','213','4')
-    a = chat_logs.get_messages('999','123')
-    print(a)
+    chat_logs.insert_message('1','1','213','4')
+    chat_logs.insert_message('1','1','213','4')
+    chat_logs.insert_message('1','1','213','4')
+    chat_logs.insert_message('123','234','213','4')
+    chat_logs.get_messages('123','234')
+
 

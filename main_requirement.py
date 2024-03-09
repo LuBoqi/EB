@@ -8,13 +8,11 @@ import re
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QApplication
-import threading
-from concurrent.futures import ThreadPoolExecutor
+
 from client import Client
 import message
 import time
-import database
-
+from database import ChatLogs
 server_ip = '127.0.0.1'
 port = 8989
 
@@ -42,6 +40,7 @@ class Login(QtWidgets.QMainWindow, Ui_Form):
             self.ui1.show()
             self.worker.start()
             self.close()
+
         else:
             self.lineEdit.clear()
             box.warning(self, '错误', "用户名或密码错误")
@@ -73,21 +72,27 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
     def __init__(self, client):
         super(Chat, self).__init__()
         self.setupUi(self)
-        self.load_massage()
         self.new_info()
         self.Client = client
+        self.chatlogs = ChatLogs("chat_logs.csv")
         self.recv_massage()
 
+
+
     def load_massage(self):
+        user_id = self.Client.id
+        print(user_id)
         # 加载数据库
-        #     list
-        # try:
-        # for i in range(10):
-        #     self.textBrowser.append(list[i,0] +'('+str(list[i,3])+')'+ ':' + list[i,2])
-        # expect:
-        #     box.warning(self, '提示', '更新失败')
-        #     self.close() 更新错误可直接关掉
-        pass
+        list = self.chatlogs.get_messages(user_id,user_id)
+        print(list)
+        if len(list)>= 10:
+            l=10
+        else:
+            l=len(list)
+        while l!=0:
+            for i in range(l):
+                self.textBrowser.append(list[i,0] +'('+str(list[i,3])+')'+ ':' + list[i,2])
+            break
 
     def new_info(self):
         # 更新在线人列表
@@ -109,6 +114,7 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
                     self.Client.now_msg.sender + '(' + self.Client.now_msg.time + ')' + ':' + self.Client.now_msg.content)
                 last_time = self.Client.now_msg.time
 
+
     def recv_massage(self):
         # 接收消息并且显示在textBrowser
         # receive code write here
@@ -125,7 +131,7 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
                 self.Client.send(0, req)
                 self.textEdit.clear()
                 # 发送消息代码 write here
-        #         写入数据库聊天记录代码 write here
+                #写入数据库聊天记录代码 write here
 
         except Exception as e:
             print(e)
