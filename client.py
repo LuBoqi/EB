@@ -10,11 +10,8 @@ import socket
 import time
 
 
-class Client(QThread):
-    def run(self):
-        self.receive()
+class Client():
     def __init__(self, server_ip, port):
-        super().__init__()
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((server_ip, port))
         self.id = None
@@ -86,7 +83,7 @@ class Client(QThread):
                     if self.now_msg.sender == 'friends':
                         self.friends = [data for data in self.now_msg.content.split('\r') if data]
                 # print(self.friends)
-                time.sleep(5)
+                # time.sleep(1)
         except Exception as e:
             print("Error:", e)
         finally:

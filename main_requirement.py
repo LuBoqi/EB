@@ -14,6 +14,7 @@ from client import Client
 import message
 import time
 import database
+from server import cmd
 
 server_ip = '127.0.0.1'
 port = 8989
@@ -38,9 +39,9 @@ class Login(QtWidgets.QMainWindow, Ui_Form):
             box.warning(self, '错误', "用户名或密码不能为空")
         elif self.Client.login(user_name, password):
             self.ui1 = Chat(self.Client)
-            self.worker = Worker(self.ui1)
+            self.ui1_refresh = Worker(self.ui1.ui_refresh)
             self.ui1.show()
-            self.worker.start()
+            self.ui1_refresh.start()
             self.close()
         else:
             self.lineEdit.clear()
@@ -56,12 +57,12 @@ class Login(QtWidgets.QMainWindow, Ui_Form):
 
 
 class Worker(QThread):
-    def __init__(self, chat):
+    def __init__(self, func):
         super().__init__()
-        self.chat = chat
+        self.func = func
 
     def run(self):
-        self.chat.ui_refresh()
+        self.func()
 
 
 class Chat(QtWidgets.QMainWindow, Ui_Form2):
@@ -74,9 +75,12 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
         super(Chat, self).__init__()
         self.setupUi(self)
         self.load_massage()
-        self.new_info()
         self.Client = client
-        self.recv_massage()
+        self.recv_massage = Worker(self.Client.receive)
+        self.get_friends = Worker(self.Client.get_friends)
+        self.recv_massage.start()
+        self.get_friends.start()
+        self.new_info()
 
     def load_massage(self):
         # 加载数据库
@@ -92,8 +96,8 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
     def new_info(self):
         # 更新在线人列表
         list_f = []  # 好友列表
-        list_n = ['张三', '李四', '王五', '赵六', '钱七', '孙八', '周九', '吴十', '郑十一', '王十二', 'nihao', 'jack',
-                  'hhhh', 'hhhhhh', '666']  # 在线列表
+        list_n = self.Client.friends  # 在线列表
+        self.listWidget.clear()
         for i in list_n:
             self.listWidget.addItem(i)
 
@@ -104,16 +108,10 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
     def ui_refresh(self):
         last_time = message.get_time_string()
         while True:
-            if self.Client.now_msg.time != last_time:
+            if self.Client.now_msg.time != last_time and self.Client.now_msg.sender not in cmd:
                 self.textBrowser.append(
                     self.Client.now_msg.sender + '(' + self.Client.now_msg.time + ')' + ':' + self.Client.now_msg.content)
                 last_time = self.Client.now_msg.time
-
-    def recv_massage(self):
-        # 接收消息并且显示在textBrowser
-        # receive code write here
-        # 接收完成后使用以下代码
-        self.Client.start()
 
     def send_massage(self):
         try:
