@@ -3,7 +3,7 @@ import threading
 from database import ChatLogs, User_info, Friend_list
 from message import Message
 
-cmd = ['password', 'friends']
+cmd = ['password', 'friends','register']
 
 
 class Server(object):
@@ -41,6 +41,16 @@ class Server(object):
                             self.clients.append([client_socket, this_msg.sender])
                         print('{}时刻{}使用密码{}'.format(this_msg.time, this_msg.sender, this_msg.content))
                         client_socket.sendall(self.msg.en_code('password', client_name, str(result)))
+                    elif this_msg.receiver == 'register':
+                        id_name = this_msg.sender
+                        pwd = this_msg.content
+                        user_id,user_name = id_name.split("@")[0],id_name.split("@")[1]
+                        result =  self.log_in.get_user(user_id,pwd) is None
+                        if result:
+                            self.log_in.insert_user(user_id,user_name,pwd)
+                        else:
+                            print("register fail!")
+                        client_socket.sendall(self.msg.en_code('register', client_name, str(result)))
                     elif this_msg.receiver == 'friends':  # 请求好友列表
                         print('{}请求好友列表'.format(this_msg.sender))
                         friends = self.friend_list.get_friends(this_msg.sender)
@@ -76,5 +86,5 @@ class Server(object):
 
 
 if __name__ == '__main__':
-    server = Server('127.0.0.1', 8989)
+    server = Server('192.168.234.161', 8989)
     server.listen()

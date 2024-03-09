@@ -35,6 +35,19 @@ class Client:
                     return False
         return True
 
+
+    def register(self,user_id,user_name,pwd):
+        id_name = user_id + '@' + user_name
+        self.client_socket.send(self.now_msg.en_code(id_name, "register",pwd ))
+        feedback = self.client_socket.recv(1024).decode()
+        feedback = [data for data in feedback.split('\r\n\r\n') if data]
+        for pack in feedback:
+            self.now_msg.de_code(pack)
+            if self.now_msg.sender == 'register':
+                print('注册结果:', self.now_msg.content)
+                if self.now_msg.content != 'True':
+                    return False
+        return True
     def send(self, receiver, msg):
         self.client_socket.send(self.now_msg.en_code(self.id, receiver, msg))
 
@@ -76,7 +89,7 @@ class Client:
 
 
 if __name__ == '__main__':
-    client = Client('127.0.0.1', 8989)
+    client = Client('192.168.234.115', 8989)
     have_login = False
     while True:
         if not have_login:

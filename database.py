@@ -89,7 +89,7 @@ class Chat_logs:
 
 
 if __name__ == '__main__':
-    # chat_logs = ChatLogs('chat_logs.csv')
+    chat_logs = ChatLogs('chat_logs.csv')
     # chat_logs.insert_message(2, 1, 'Hi')
     # chat_logs.insert_message(1, 2, 'How are you?')
     # chat_logs.insert_message(2, 1, 'I am good, thank you!')
@@ -98,9 +98,7 @@ if __name__ == '__main__':
     # print(messages)
     #
     # chat_logs.close_connection()
-    #
-    log_in = User_info('user_info.csv')
-    log_in.ID_sign_up('1', 'user1', 'password1')
+
     # # log_in.insert_user(2, 'user2', 'password2')
     # # log_in.insert_user(3, 'user3', 'password3')
     #
