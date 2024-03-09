@@ -55,7 +55,8 @@ class Server(object):
                         client_socket.sendall(self.msg.en_code('register', client_name, str(result)))
                     elif this_msg.receiver == 'friends':  # 请求好友列表
                         print('{}请求好友列表'.format(this_msg.sender))
-                        friends = self.friend_list.get_friends(this_msg.sender)
+                        # friends = self.friend_list.get_friends(this_msg.sender)
+                        friends = [itm[1] for itm in self.clients]
                         tmp_msg = '\r'
                         for friend in friends:
                             tmp_msg = tmp_msg + friend + '\r'
