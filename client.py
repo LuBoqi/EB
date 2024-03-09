@@ -1,12 +1,10 @@
-import threading
 from concurrent.futures import ThreadPoolExecutor
-
-import message
 from message import Message
 from database import ChatLogs
+from server import cmd
+import message
 import socket
 import time
-from server import cmd
 
 
 class Client:
@@ -35,10 +33,9 @@ class Client:
                     return False
         return True
 
-
-    def register(self,user_id,user_name,pwd):
+    def register(self, user_id, user_name, pwd):
         id_name = user_id + '@' + user_name
-        self.client_socket.send(self.now_msg.en_code(id_name, "register",pwd ))
+        self.client_socket.send(self.now_msg.en_code(id_name, "register", pwd))
         feedback = self.client_socket.recv(1024).decode()
         feedback = [data for data in feedback.split('\r\n\r\n') if data]
         for pack in feedback:
@@ -48,19 +45,20 @@ class Client:
                 if self.now_msg.content != 'True':
                     return False
         return True
+
     def send(self, receiver, msg):
         self.client_socket.send(self.now_msg.en_code(self.id, receiver, msg))
 
     def receive(self):
         try:
             while True:
-                self.send('1', 'hello')
                 feedback = self.client_socket.recv(1024).decode()
                 feedback = [data for data in feedback.split('\r\n\r\n') if data]
                 for pack in feedback:
                     self.now_msg.de_code(pack)
                     if self.now_msg.sender not in cmd and self.now_msg.receiver == self.id:
-                        print('收到消息:', self.now_msg.content)
+                        print('{}收到{}消息:{}'.format(message.get_time_string(),
+                                                       self.now_msg.sender, self.now_msg.content))
                 time.sleep(1)
         except Exception as e:
             print("Error:", e)
@@ -87,9 +85,19 @@ class Client:
         finally:
             exit(-1)
 
+    def test_send(self):
+        try:
+            while True:
+                self.send('0', self.id)
+                time.sleep(1)
+        except Exception as e:
+            print('Error:', e)
+        finally:
+            exit(-3)
+
 
 if __name__ == '__main__':
-    client = Client('192.168.234.115', 8989)
+    client = Client('127.0.0.1', 8989)
     have_login = False
     while True:
         if not have_login:
@@ -101,5 +109,6 @@ if __name__ == '__main__':
             threadPool = ThreadPoolExecutor(max_workers=4)
             threadPool.submit(client.get_friends)
             threadPool.submit(client.receive)
+            threadPool.submit(client.test_send)
             threadPool.shutdown(wait=True)
         time.sleep(0.1)

@@ -3,7 +3,7 @@ import threading
 from database import ChatLogs, User_info, Friend_list
 from message import Message
 
-cmd = ['password', 'friends','register']
+cmd = ['password', 'friends', 'register']
 
 
 class Server(object):
@@ -44,10 +44,10 @@ class Server(object):
                     elif this_msg.receiver == 'register':
                         id_name = this_msg.sender
                         pwd = this_msg.content
-                        user_id,user_name = id_name.split("@")[0],id_name.split("@")[1]
-                        result =  self.log_in.get_user(user_id,pwd) is None
+                        user_id, user_name = id_name.split("@")[0], id_name.split("@")[1]
+                        result = self.log_in.get_user(user_id, pwd) is None
                         if result:
-                            self.log_in.insert_user(user_id,user_name,pwd)
+                            self.log_in.insert_user(user_id, user_name, pwd)
                         else:
                             print("register fail!")
                         client_socket.sendall(self.msg.en_code('register', client_name, str(result)))
@@ -61,11 +61,17 @@ class Server(object):
                     else:  # 发送消息
                         print('{}时刻{}向{}发送{}'.format(this_msg.time, this_msg.sender,
                                                           this_msg.receiver, this_msg.content))
-                        for client in self.clients:  # 群发消息
-                            if client[1] == this_msg.receiver:
-                                client[0].sendall(self.msg.en_code(this_msg.sender,
-                                                                   this_msg.receiver, this_msg.content))
-
+                        if this_msg.receiver == '0':  # 群发消息
+                            for client in self.clients:
+                                if client[1] != this_msg.sender:
+                                    client[0].sendall(self.msg.en_code(this_msg.sender,
+                                                                       client[1], this_msg.content))
+                        else:  # 私聊发送
+                            for client in self.clients:
+                                if client[1] == this_msg.receiver:
+                                    client[0].sendall(self.msg.en_code(this_msg.sender,
+                                                                       this_msg.receiver, this_msg.content))
+                                    break
         except Exception as e:
             print("Error:", e)
         finally:
