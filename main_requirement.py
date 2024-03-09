@@ -1,4 +1,6 @@
 import sys
+from multiprocessing import Process
+
 from chat import Ui_Form2
 from log import Ui_Form
 from sign_up import Ui_Form3
@@ -13,34 +15,34 @@ import message
 import time
 import database
 
-server_ip ='127.0.0.1'
-port=8989
+server_ip = '127.0.0.1'
+port = 8989
 
-class Login(QtWidgets.QMainWindow,Ui_Form):
+
+class Login(QtWidgets.QMainWindow, Ui_Form):
     ui1 = ''
     ui2 = ''
+
     def __init__(self):
         super(Login, self).__init__()
         self.setupUi(self)
-        self.Client = Client(server_ip,port)
+        self.Client = Client(server_ip, port)
 
     def login(self):
-        box=QtWidgets.QMessageBox()
-        user_name=self.lineEdit_3.text()  #用户名
-        password=self.lineEdit.text()   #密码
-        print(user_name,password)
-    #   判断用户名和密码是否存在或正确
-        if user_name =='' or password =='':
-            box.warning(self,'错误',"用户名或密码不能为空")
-        elif self.Client.login(user_name,password):
-            self.ui1 = Chat()
+        box = QtWidgets.QMessageBox()
+        user_name = self.lineEdit_3.text()  # 用户名
+        password = self.lineEdit.text()  # 密码
+        print(user_name, password)
+        #   判断用户名和密码是否存在或正确
+        if user_name == '' or password == '':
+            box.warning(self, '错误', "用户名或密码不能为空")
+        elif self.Client.login(user_name, password):
+            self.ui1 = Chat(self.Client)
             self.ui1.show()
             self.close()
         else:
             self.lineEdit.clear()
-            box.warning(self,'错误',"用户名或密码错误")
-
-
+            box.warning(self, '错误', "用户名或密码错误")
 
     def sign_up(self):
         self.ui2 = Signup()
@@ -50,24 +52,23 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
         self.close()
         Client.close()
 
-class Chat(QtWidgets.QMainWindow,Ui_Form2):
+
+class Chat(QtWidgets.QMainWindow, Ui_Form2):
     # write chat code
 
-    def __init__(self):
+    def __init__(self, client):
         super(Chat, self).__init__()
         self.setupUi(self)
         self.load_massage()
         self.new_info()
-        self.recv_massage()
-        self.Client = Client(server_ip, port)
-
+        self.Client = client
 
     def load_massage(self):
         # 加载数据库
         #     list
         # try:
-            # for i in range(10):
-            #     self.textBrowser.append(list[i,0] +'('+str(list[i,3])+')'+ ':' + list[i,2])
+        # for i in range(10):
+        #     self.textBrowser.append(list[i,0] +'('+str(list[i,3])+')'+ ':' + list[i,2])
         # expect:
         #     box.warning(self, '提示', '更新失败')
         #     self.close() 更新错误可直接关掉
@@ -75,15 +76,16 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
 
     def new_info(self):
         # 更新在线人列表
-        list_f=[]   #好友列表
-        list_n=['张三','李四','王五','赵六','钱七','孙八','周九','吴十','郑十一','王十二','nihao','jack','hhhh','hhhhhh','666'] #在线列表
+        list_f = []  # 好友列表
+        list_n = ['张三', '李四', '王五', '赵六', '钱七', '孙八', '周九', '吴十', '郑十一', '王十二', 'nihao', 'jack',
+                  'hhhh', 'hhhhhh', '666']  # 在线列表
         for i in list_n:
             self.listWidget.addItem(i)
 
         # write code here
 
-
         pass
+
     def ui_refresh(self):
         last_time = message.get_time_string()
         while True:
@@ -96,21 +98,16 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
         # 接收消息并且显示在textBrowser
         # receive code write here
         # 接收完成后使用以下代码
-        threadPool = ThreadPoolExecutor(max_workers=4)
-        threadPool.submit(Client.get_friends)
-        threadPool.submit(Client.receive)
-        threadPool.submit(self.ui_refresh)
-
-        threadPool.shutdown(wait=True)
+        pass
 
     def send_massage(self):
         try:
             req = self.textEdit.toPlainText()
             if req:
-                Time=time.strftime("%H:%M:%S", time.localtime())
-                reqs = '我 ' + '('+str(Time) +')' +':' + req
+                Time = time.strftime("%H:%M:%S", time.localtime())
+                reqs = '我 ' + '(' + str(Time) + ')' + ':' + req
                 self.textBrowser.append(reqs)
-                self.Client.send(0,req)
+                self.Client.send(0, req)
                 self.textEdit.clear()
                 # 发送消息代码 write here
         #         写入数据库聊天记录代码 write here
@@ -119,21 +116,18 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
             print(e)
 
 
-
-    pass
-
-class Signup(QtWidgets.QMainWindow,Ui_Form3):
+class Signup(QtWidgets.QMainWindow, Ui_Form3):
     def __init__(self):
         super(Signup, self).__init__()
         self.setupUi(self)
-        self.client = Client(server_ip,port)
+        self.client = Client(server_ip, port)
 
     def signup(self):
         try:
-            box=QtWidgets.QMessageBox()
-            nick_name=self.lineEdit.text()
-            user_name=self.lineEdit_2.text()
-            password=self.lineEdit_3.text()
+            box = QtWidgets.QMessageBox()
+            nick_name = self.lineEdit.text()
+            user_name = self.lineEdit_2.text()
+            password = self.lineEdit_3.text()
             if len(nick_name) > 7:
                 box.warning(self, '提示', '昵称太长')
             elif len(nick_name) == 0:
@@ -151,18 +145,19 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
             elif not re.match("^[a-zA-Z0-9_]{0,12}$", password):
                 box.warning(self, "提示", "密码输入格式有误!")
             else:
-                user=dict()
+                user = dict()
                 # 需添加密码写入code    password=？？？
-                user['nick_name']=nick_name
-                user['user_name']=user_name
-                user['password']=password
+                user['nick_name'] = nick_name
+                user['user_name'] = user_name
+                user['password'] = password
                 print(user)
-                self.client.register(user['user_name'], user['nick_name'],user['password'])
+                self.client.register(user['user_name'], user['nick_name'], user['password'])
                 self.close()
                 #   需添加写入注册代码
 
 
         except:
             box.warning(self, '提示', '注册失败')
+
     def exit(self):
         self.close()
