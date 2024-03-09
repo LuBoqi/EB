@@ -6,6 +6,7 @@ class ChatLogs:
         self.file_path = file_path
         try:
             self.df = pd.read_csv(file_path)
+            print(self.df.values[-1:-5:-1])
         except pd.errors.EmptyDataError or FileNotFoundError:
             self.df = pd.DataFrame(columns=['Sender_ID', 'Receiver_ID', 'Message', 'Time'])
             self.df.to_csv(file_path, index=False)
@@ -40,10 +41,15 @@ class User_info:
     def get_user(self, user_id, user_password):
         user_id = eval(user_id)
         user = self.df[self.df['User_ID'] == user_id]
-        if user.empty or user['Password'].iloc[0] != user_password:
+        a = user['Password'].iloc[0]
+        if user.empty:
             print("User not found or incorrect password")
             return None
-        return user
+        else:
+            if user['Password'].iloc[0]==user_password:
+                return True
+            else:
+                return False
 
 
     def ID_check(self,user_id):
@@ -92,7 +98,8 @@ class Friend_list:
 if __name__ == '__main__':
     chat_logs = ChatLogs('chat_logs.csv')
     user_info = User_info('user_info.csv')
-    friend_list = Friend_list("friend_list.csv")
-    user_info.ID_check("123")
+    # friend_list = Friend_list("friend_list.csv")
+    # user_info.ID_check("123")
+    user_info.get_user('123',"")
 
 
