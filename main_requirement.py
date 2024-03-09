@@ -151,7 +151,7 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
                 user['user_name']=user_name
                 user['password']=password
                 print(user)
-                self.client.register(user['nick_name'], user['user_name'],user['password'])
+                self.client.register(user['user_name'], user['nick_name'],user['password'])
                 self.close()
                 #   需添加写入注册代码
 
