@@ -1,5 +1,13 @@
 User_ID,User_Name,Password
+<<<<<<< HEAD
 123,123,123
 456,456,456
 789,789,abc123
 123,123,123123
+=======
+0,admin,admin
+1,user1,password1
+2,user2,password2
+1,user1,password1
+123,a123,123
+>>>>>>> 71879a762e6656734f12d99d8f3e622696fb3f23
