@@ -3,6 +3,8 @@ import threading
 from database import ChatLogs, User_info, Friend_list
 from message import Message
 
+cmd = ['password', 'friends']
+
 
 class Server(object):
     def __init__(self, ip, port):
@@ -14,6 +16,7 @@ class Server(object):
         self.log_in = User_info('user_info.csv')
         self.friend_list = Friend_list('friend_list.csv')
         self.msg = Message('server')
+        self.clients = []
 
     def handle_client(self, client_socket, client_address):
         print("连接来自:", client_address)
@@ -23,7 +26,7 @@ class Server(object):
         try:
             while True:
                 if land_error_time > 5:  # 密码输错5次就关闭链接
-                    client_socket.sendall(self.msg.en_code('server', client_name, '密码错误！！！'))
+                    client_socket.sendall(self.msg.en_code('password', client_name, '密码错误！！！'))
                     client_socket.close()
                     break
                 received_data = client_socket.recv(1024).decode()
@@ -34,9 +37,12 @@ class Server(object):
                         result = self.log_in.get_user(this_msg.sender, this_msg.content) is not None
                         if not result:
                             land_error_time = land_error_time + 1
+                        else:
+                            self.clients.append([client_socket, this_msg.sender])
                         print('{}时刻{}使用密码{}'.format(this_msg.time, this_msg.sender, this_msg.content))
                         client_socket.sendall(self.msg.en_code('password', client_name, str(result)))
                     elif this_msg.receiver == 'friends':  # 请求好友列表
+                        print('{}请求好友列表'.format(this_msg.sender))
                         friends = self.friend_list.get_friends(this_msg.sender)
                         tmp_msg = '\r'
                         for friend in friends:
@@ -45,6 +51,10 @@ class Server(object):
                     else:  # 发送消息
                         print('{}时刻{}向{}发送{}'.format(this_msg.time, this_msg.sender,
                                                           this_msg.receiver, this_msg.content))
+                        for client in self.clients:  # 群发消息
+                            if client[1] == this_msg.receiver:
+                                client[0].sendall(self.msg.en_code(this_msg.sender,
+                                                                   this_msg.receiver, this_msg.content))
 
         except Exception as e:
             print("Error:", e)
