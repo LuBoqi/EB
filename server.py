@@ -45,9 +45,10 @@ class Server(object):
                         id_name = this_msg.sender
                         pwd = this_msg.content
                         user_id, user_name = id_name.split("@")[0], id_name.split("@")[1]
-                        result = self.log_in.get_user(user_id, pwd) is None
+                        result = self.log_in.ID_check(user_id)
                         if result:
                             self.log_in.insert_user(user_id, user_name, pwd)
+                            self.log_in = User_info('user_info.csv')
                         else:
                             print("register fail!")
                         client_socket.sendall(self.msg.en_code('register', client_name, str(result)))
