@@ -8,11 +8,11 @@ class ChatLogs:
             self.df = pd.read_csv(file_path)
             print(self.df)
         except pd.errors.EmptyDataError or FileNotFoundError:
-            self.df = pd.DataFrame(columns=['Sender_ID', 'Receiver_ID', 'Message'])
+            self.df = pd.DataFrame(columns=['Sender_ID', 'Receiver_ID', 'Message','Time'])
             self.df.to_csv(file_path, index=False)
 
-    def insert_message(self, sender_id, receiver_id, message):
-        new_row = {'Sender_ID': sender_id, 'Receiver_ID': receiver_id, 'Message': message}
+    def insert_message(self, sender_id, receiver_id, message, time):
+        new_row = {'Sender_ID': sender_id, 'Receiver_ID': receiver_id, 'Message': message, 'Time': time}
         self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True, sort=False)
         self.df.to_csv(self.file_path, index=False)
 
@@ -82,39 +82,6 @@ class Friend_list:
         self.df.to_csv(self.file_path, index=False)
 
 
-class Chat_logs:
-
-    def close_connection(self):
-        self.df.to_csv(self.file_path, index=False)
-
-
 if __name__ == '__main__':
     chat_logs = ChatLogs('chat_logs.csv')
-    # chat_logs.insert_message(2, 1, 'Hi')
-    # chat_logs.insert_message(1, 2, 'How are you?')
-    # chat_logs.insert_message(2, 1, 'I am good, thank you!')
-    #
-    # messages = chat_logs.get_messages(6, 2)
-    # print(messages)
-    #
-    # chat_logs.close_connection()
 
-    # # log_in.insert_user(2, 'user2', 'password2')
-    # # log_in.insert_user(3, 'user3', 'password3')
-    #
-    # user = log_in.get_user(1, 'password1')
-    # print(user)
-    # log_in.close_connection()
-    # friends = Friend_list('friend_list.csv')
-    # friends.insert_friend("1", "sam")
-    # friends.insert_friend("1", "sam")
-    # friends.insert_friend("2", "john")
-    # friends.insert_friend("3", "tom")
-    # friends.insert_friend("4", "jerry")
-    # friends.insert_friend("1", "jim")
-    # friends.insert_friend("1", "Daming")
-    # friend = friends.get_friends("1")
-    # print(friend)
-    # friends.delete_friend("1", "sam")
-    # friend = friends.get_friends("1")
-    # print(friend)

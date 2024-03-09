@@ -11,7 +11,7 @@ import message
 import time
 import database
 
-ip='127.0.0.1'
+server_ip ='10.24.41.5'
 port=8989
 
 class Login(QtWidgets.QMainWindow,Ui_Form):
@@ -20,7 +20,7 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
     def __init__(self):
         super(Login, self).__init__()
         self.setupUi(self)
-        self.Client = Client(ip,port)
+        self.Client = Client(server_ip,port)
 
     def login(self):
         box=QtWidgets.QMessageBox()
@@ -110,7 +110,7 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
     def __init__(self):
         super(Signup, self).__init__()
         self.setupUi(self)
-        self.user_info = database.User_info("./user_info.csv")
+        self.client = Client(server_server_ip,port)
 
     def signup(self):
         try:
@@ -139,7 +139,7 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
                 user['user_name']=user_name
                 user['password']=password
                 print(user)
-                # self.user_info.insert_user(user_id=user['user_name'] , user_name=user['nick_name'],password=user['password'])
+                self.client.register(user['nick_name'], user['user_name'],user['password'])
                 self.close()
                 #   需添加写入注册代码
 
