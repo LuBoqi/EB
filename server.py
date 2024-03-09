@@ -1,6 +1,6 @@
 import socket
 import threading
-from database import ChatLogs, User_info
+from database import ChatLogs, User_info, Friend_list
 from message import Message
 
 
@@ -12,6 +12,7 @@ class Server(object):
         self.server_socket.bind((ip, port))
         self.chat_logs = ChatLogs('chat_logs.csv')
         self.log_in = User_info('user_info.csv')
+        self.friend_list = Friend_list('friend_list.csv')
         self.msg = Message('server')
 
     def handle_client(self, client_socket, client_address):
@@ -29,13 +30,19 @@ class Server(object):
                 received_data = [data for data in received_data.split('\r\n\r\n') if data]
                 for pack in received_data:
                     this_msg.de_code(pack)
-                    if this_msg.receiver == 'server':
+                    if this_msg.receiver == 'password':  # 登陆密码判定
                         result = self.log_in.get_user(this_msg.sender, this_msg.content) is not None
                         if not result:
                             land_error_time = land_error_time + 1
                         print('{}时刻{}使用密码{}'.format(this_msg.time, this_msg.sender, this_msg.content))
-                        client_socket.sendall(self.msg.en_code('server', client_name, str(result)))
-                    else:
+                        client_socket.sendall(self.msg.en_code('password', client_name, str(result)))
+                    elif this_msg.receiver == 'friends':  # 请求好友列表
+                        friends = self.friend_list.get_friends(this_msg.sender)
+                        tmp_msg = '\r'
+                        for friend in friends:
+                            tmp_msg = tmp_msg + friend + '\r'
+                        client_socket.sendall(self.msg.en_code('friends', client_name, tmp_msg))
+                    else:  # 发送消息
                         print('{}时刻{}向{}发送{}'.format(this_msg.time, this_msg.sender,
                                                           this_msg.receiver, this_msg.content))
 
