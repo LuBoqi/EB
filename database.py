@@ -6,7 +6,6 @@ class ChatLogs:
         self.file_path = file_path
         try:
             self.df = pd.read_csv(file_path)
-            print(self.df.values[-1:-5:-1])
         except pd.errors.EmptyDataError or FileNotFoundError:
             self.df = pd.DataFrame(columns=['Sender_ID', 'Receiver_ID', 'Message', 'Time'])
             self.df.to_csv(file_path, index=False)
@@ -18,7 +17,10 @@ class ChatLogs:
 
     def get_messages(self, sender_id, receiver_id):
         messages = self.df[(self.df['Sender_ID'] == sender_id) & (self.df['Receiver_ID'] == receiver_id)]
-        return messages['Message'].tolist()
+        messages = messages.values
+        print(messages)
+
+
 
     def close_connection(self):
         self.df.to_csv(self.file_path, index=False)
@@ -98,8 +100,11 @@ class Friend_list:
 if __name__ == '__main__':
     chat_logs = ChatLogs('chat_logs.csv')
     user_info = User_info('user_info.csv')
-    # friend_list = Friend_list("friend_list.csv")
-    # user_info.ID_check("123")
-    user_info.get_user('123',"")
+    friend_list = Friend_list("friend_list.csv")
+    chat_logs.insert_message('1','1','213','4')
+    chat_logs.insert_message('1','1','213','4')
+    chat_logs.insert_message('1','1','213','4')
+    chat_logs.insert_message('123','234','213','4')
+    chat_logs.get_messages('123','234')
 
 
