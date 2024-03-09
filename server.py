@@ -63,6 +63,8 @@ class Server(object):
                     else:  # 发送消息
                         print('{}时刻{}向{}发送{}'.format(this_msg.time, this_msg.sender,
                                                           this_msg.receiver, this_msg.content))
+                        self.chat_logs.insert_message(this_msg.sender, this_msg.receiver,this_msg.content,this_msg.time)
+                        self.chat_logs = ChatLogs('chat_logs.csv')
                         if this_msg.receiver == '0':  # 群发消息
                             for client in self.clients:
                                 if client[1] != this_msg.sender:
