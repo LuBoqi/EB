@@ -1,4 +1,6 @@
 import threading
+from concurrent.futures import ThreadPoolExecutor
+
 import message
 from message import Message
 from database import ChatLogs
@@ -83,9 +85,8 @@ if __name__ == '__main__':
             print('欢迎进入管理员帐号')
         else:
             print('进入服务')
-            friend_thread = threading.Thread(target=client.get_friends())
-            receive_thread = threading.Thread(target=client.receive())
-            # receive_thread.start()
-            # friend_thread.start()
-            client.send('1', message.get_time_string())
+            threadPool = ThreadPoolExecutor(max_workers=4)
+            threadPool.submit(client.get_friends)
+            threadPool.submit(client.receive)
+            threadPool.shutdown(wait=True)
         time.sleep(0.1)
