@@ -38,7 +38,9 @@ class Login(QtWidgets.QMainWindow, Ui_Form):
             box.warning(self, '错误', "用户名或密码不能为空")
         elif self.Client.login(user_name, password):
             self.ui1 = Chat(self.Client)
+            self.worker = Worker(self.ui1)
             self.ui1.show()
+            self.worker.start()
             self.close()
         else:
             self.lineEdit.clear()
@@ -50,11 +52,23 @@ class Login(QtWidgets.QMainWindow, Ui_Form):
 
     def exit(self):
         self.close()
-        Client.close()
+        self.Client.close()
+
+
+class Worker(QThread):
+    def __init__(self, chat):
+        super().__init__()
+        self.chat = chat
+
+    def run(self):
+        self.chat.ui_refresh()
 
 
 class Chat(QtWidgets.QMainWindow, Ui_Form2):
     # write chat code
+
+    def run(self):
+        self.ui_refresh()
 
     def __init__(self, client):
         super(Chat, self).__init__()
@@ -62,6 +76,7 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
         self.load_massage()
         self.new_info()
         self.Client = client
+        self.recv_massage()
 
     def load_massage(self):
         # 加载数据库
@@ -98,7 +113,7 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
         # 接收消息并且显示在textBrowser
         # receive code write here
         # 接收完成后使用以下代码
-        pass
+        self.Client.start()
 
     def send_massage(self):
         try:

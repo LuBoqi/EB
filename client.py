@@ -1,4 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
+
+from PyQt5.QtCore import QThread
+
 from message import Message
 from database import ChatLogs
 from server import cmd
@@ -7,8 +10,11 @@ import socket
 import time
 
 
-class Client:
+class Client(QThread):
+    def run(self):
+        self.receive()
     def __init__(self, server_ip, port):
+        super().__init__()
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((server_ip, port))
         self.id = None
