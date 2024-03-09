@@ -101,9 +101,6 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
         for i in list_n:
             self.listWidget.addItem(i)
 
-        # write code here
-
-        pass
 
     def ui_refresh(self):
         last_time = message.get_time_string()

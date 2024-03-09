@@ -60,6 +60,9 @@ class Client():
                 feedback = [data for data in feedback.split('\r\n\r\n') if data]
                 for pack in feedback:
                     self.now_msg.de_code(pack)
+                    if self.now_msg.sender == 'friends':
+                        self.friends = [data for data in self.now_msg.content.split('\r') if data]
+                        continuey
                     if self.now_msg.sender not in cmd and self.now_msg.receiver == self.id:
                         print('{}收到{}消息:{}'.format(message.get_time_string(),
                                                        self.now_msg.sender, self.now_msg.content))
