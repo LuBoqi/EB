@@ -7,7 +7,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QApplication
 import threading
-
+from concurrent.futures import ThreadPoolExecutor
 from client import Client
 import message
 import time
@@ -58,13 +58,16 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
         self.setupUi(self)
         self.load_massage()
         self.new_info()
+        self.recv_massage()
         self.Client = Client(server_ip, port)
+
 
     def load_massage(self):
         # 加载数据库
+        #     list
         # try:
             # for i in range(10):
-            #     self.textBrowser.append(load_username +'('+str(Time)+')'+ ':' + load_msg)
+            #     self.textBrowser.append(list[i,0] +'('+str(list[i,3])+')'+ ':' + list[i,2])
         # expect:
         #     box.warning(self, '提示', '更新失败')
         #     self.close() 更新错误可直接关掉
@@ -81,18 +84,24 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
 
 
         pass
+    def ui_refresh(self):
+        last_time = message.get_time_string()
+        while True:
+            if self.Client.now_msg.time != last_time:
+                self.textBrowser.append(
+                    self.Client.now_msg.sender + '(' + self.Client.now_msg.time + ')' + ':' + self.Client.now_msg.content)
+                last_time = self.Client.now_msg.time
 
     def recv_massage(self):
         # 接收消息并且显示在textBrowser
         # receive code write here
         # 接收完成后使用以下代码
+        threadPool = ThreadPoolExecutor(max_workers=4)
+        threadPool.submit(Client.get_friends)
+        threadPool.submit(Client.receive)
+        threadPool.submit(self.ui_refresh)
 
-        # recv_username
-        # Time
-        # recv_msg
-        # self.textBrowser.append(recv_username + '('+str(Time)+')' + ':' + recv_msg)
-
-        pass
+        threadPool.shutdown(wait=True)
 
     def send_massage(self):
         try:
@@ -112,9 +121,6 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
 
 
     pass
-
-# class Thread:
-#     def __init__(self,dict):
 
 class Signup(QtWidgets.QMainWindow,Ui_Form3):
     def __init__(self):
