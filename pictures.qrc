@@ -1,11 +1,11 @@
 <RCC>
-  <qresource prefix="school badge&#xa;&#xa;">
-    <file>UI/whitebackground.jpg</file>
-  </qresource>
   <qresource prefix="back">
     <file>UI/校徽.jpg</file>
   </qresource>
   <qresource prefix="background">
+    <file>UI/background3.jpg</file>
+    <file>UI/background2.jpg</file>
+    <file>UI/background1.jpg</file>
     <file>UI/whitebackground.jpg</file>
   </qresource>
 </RCC>

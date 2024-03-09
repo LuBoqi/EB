@@ -33,8 +33,8 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
             self.close()
             box.setText("登录成功")
         else:
-            self.close()
-            box.setText("用户名或密码错误")
+            self.lineEdit.clear()
+            box.warning('错误',"用户名或密码错误")
 
 
 
@@ -68,7 +68,7 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
     def new_info(self):
         # 更新在线人列表
         list_f=[]   #好友列表
-        list_n=['张三','李四','王五','赵六','钱七','孙八','周九','吴十','郑十一','王十二'] #在线列表
+        list_n=['张三','李四','王五','赵六','钱七','孙八','周九','吴十','郑十一','王十二','nihao','jack','hhhh','hhhhhh','666'] #在线列表
         for i in list_n:
             self.listWidget.addItem(i)
 

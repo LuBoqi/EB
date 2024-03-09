@@ -44,6 +44,11 @@ background-image: url(:/background/UI/whitebackground.jpg);</string>
       <height>171</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);
+font: 12pt &quot;华文楷体&quot;;
+background-image: url(:/background/UI/background3.jpg);</string>
+    </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
     </property>
@@ -56,6 +61,10 @@ background-image: url(:/background/UI/whitebackground.jpg);</string>
       <width>471</width>
       <height>241</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/background/UI/background3.jpg);
+font: 12pt &quot;华文楷体&quot;;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::WinPanel</enum>
@@ -71,7 +80,8 @@ background-image: url(:/background/UI/whitebackground.jpg);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);</string>
+     <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);
+background-image: url(:/background/UI/background3.jpg);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -158,7 +168,7 @@ p, li { white-space: pre-wrap; }
      </palette>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);</string>
+     <string notr="true">background-image: url(:/background/UI/background3.jpg);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -283,6 +293,9 @@ p, li { white-space: pre-wrap; }
        <height>28</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);</string>
+     </property>
      <property name="text">
       <string>-</string>
      </property>
@@ -295,6 +308,9 @@ p, li { white-space: pre-wrap; }
        <width>31</width>
        <height>28</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);</string>
      </property>
      <property name="text">
       <string>X</string>
@@ -322,6 +338,11 @@ p, li { white-space: pre-wrap; }
       <width>201</width>
       <height>371</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/background/UI/whitebackground.jpg);
+font: 75 12pt &quot;Agency FB&quot;;
+background-image: url(:/background/UI/background3.jpg);</string>
     </property>
    </widget>
    <zorder>textBrowser_2</zorder>
