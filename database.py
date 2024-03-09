@@ -6,9 +6,8 @@ class ChatLogs:
         self.file_path = file_path
         try:
             self.df = pd.read_csv(file_path)
-            print(self.df)
         except pd.errors.EmptyDataError or FileNotFoundError:
-            self.df = pd.DataFrame(columns=['Sender_ID', 'Receiver_ID', 'Message','Time'])
+            self.df = pd.DataFrame(columns=['Sender_ID', 'Receiver_ID', 'Message', 'Time'])
             self.df.to_csv(file_path, index=False)
 
     def insert_message(self, sender_id, receiver_id, message, time):
@@ -29,7 +28,6 @@ class User_info:
         self.file_path = file_path
         try:
             self.df = pd.read_csv(file_path)
-            print(self.df)
         except pd.errors.EmptyDataError or FileNotFoundError:
             self.df = pd.DataFrame(columns=['User_ID', 'User_Name', 'Password'])
             self.df.to_csv(file_path, index=False)
@@ -39,8 +37,6 @@ class User_info:
         self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True, sort=False)
         self.df.to_csv(self.file_path, index=False)
 
-
-
     def get_user(self, user_id, user_password):
         user_id = eval(user_id)
         user = self.df[self.df['User_ID'] == user_id]
@@ -48,6 +44,17 @@ class User_info:
             print("User not found or incorrect password")
             return None
         return user
+
+
+    def ID_check(self,user_id):
+        user_id = eval(user_id)
+        user = self.df[self.df['User_ID'] == user_id]
+        if user.empty:
+            print("注册成功")
+            return True
+        else:
+            print("注册失败")
+            return False
 
     def close_connection(self):
         self.df.to_csv(self.file_path, index=False)
@@ -84,4 +91,8 @@ class Friend_list:
 
 if __name__ == '__main__':
     chat_logs = ChatLogs('chat_logs.csv')
+    user_info = User_info('user_info.csv')
+    friend_list = Friend_list("friend_list.csv")
+    user_info.ID_check("123")
+
 

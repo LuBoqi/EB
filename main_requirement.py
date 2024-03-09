@@ -7,6 +7,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QApplication
 import threading
+
 from client import Client
 import message
 import time
@@ -29,11 +30,12 @@ class Login(QtWidgets.QMainWindow,Ui_Form):
         password=self.lineEdit.text()   #密码
         print(user_name,password)
     #   判断用户名和密码是否存在或正确
-        if self.Client.login(user_name,password):
+        if user_name =='' or password =='':
+            box.warning(self,'错误',"用户名或密码不能为空")
+        elif self.Client.login(user_name,password):
             self.ui1 = Chat()
             self.ui1.show()
             self.close()
-            box.setText("登录成功")
         else:
             self.lineEdit.clear()
             box.warning(self,'错误',"用户名或密码错误")
@@ -56,6 +58,7 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
         self.setupUi(self)
         self.load_massage()
         self.new_info()
+        self.Client = Client(server_ip, port)
 
     def load_massage(self):
         # 加载数据库
@@ -98,6 +101,7 @@ class Chat(QtWidgets.QMainWindow,Ui_Form2):
                 Time=time.strftime("%H:%M:%S", time.localtime())
                 reqs = '我 ' + '('+str(Time) +')' +':' + req
                 self.textBrowser.append(reqs)
+                self.Client.send(0,req)
                 self.textEdit.clear()
                 # 发送消息代码 write here
         #         写入数据库聊天记录代码 write here
@@ -132,6 +136,8 @@ class Signup(QtWidgets.QMainWindow,Ui_Form3):
                 box.warning(self, '提示', '账号太长')
             elif len(user_name) == 0:
                 box.warning(self, '提示', '请输入账号')
+            # elif type(user_name)=='str':
+            #     box.warning(self, '提示', '账号不能有字母')
             elif len(password) > 12:
                 box.warning(self, '提示', '密码太长')
             elif len(password) == 0:
