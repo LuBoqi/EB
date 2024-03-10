@@ -1,7 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
 
-from PyQt5.QtCore import QThread
-
 from message import Message
 from database import ChatLogs
 from server import cmd
@@ -54,23 +52,23 @@ class Client():
         self.client_socket.send(self.now_msg.en_code(self.id, receiver, msg))
 
     def receive(self):
-        try:
-            while True:
+        # try:
+        #     while True:
                 feedback = self.client_socket.recv(1024).decode()
                 feedback = [data for data in feedback.split('\r\n\r\n') if data]
                 for pack in feedback:
                     self.now_msg.de_code(pack)
                     if self.now_msg.sender == 'friends':
+                        print('收到在线人员信息')
                         self.friends = [data for data in self.now_msg.content.split('\r') if data]
-                        continuey
+                        continue
                     if self.now_msg.sender not in cmd and self.now_msg.receiver == self.id:
                         print('{}收到{}消息:{}'.format(message.get_time_string(),
                                                        self.now_msg.sender, self.now_msg.content))
-                time.sleep(1)
-        except Exception as e:
-            print("Error:", e)
-        finally:
-            exit(-2)
+        # except Exception as e:
+        #     print("Error:", e)
+        # finally:
+        #     exit(-2)
 
     def close(self):
         self.client_socket.close()
@@ -85,8 +83,13 @@ class Client():
                     self.now_msg.de_code(pack)
                     if self.now_msg.sender == 'friends':
                         self.friends = [data for data in self.now_msg.content.split('\r') if data]
+                    else:
+                        self.now_msg.de_code(pack)
+                        if self.now_msg.sender not in cmd and self.now_msg.receiver == self.id:
+                            print('{}收到{}消息:{}'.format(message.get_time_string(),
+                                                           self.now_msg.sender, self.now_msg.content))
                 # print(self.friends)
-                # time.sleep(1)
+                time.sleep(1)
         except Exception as e:
             print("Error:", e)
         finally:

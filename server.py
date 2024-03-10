@@ -17,6 +17,7 @@ class Server(object):
         self.friend_list = Friend_list('friend_list.csv')
         self.msg = Message('server')
         self.clients = []
+        self.need_update = True
 
     def handle_client(self, client_socket, client_address):
         print("连接来自:", client_address)
@@ -34,12 +35,13 @@ class Server(object):
                 for pack in received_data:
                     this_msg.de_code(pack)
                     if this_msg.receiver == 'password':  # 登陆密码判定
-                        result = self.log_in.get_user(this_msg.sender, this_msg.content) is not None
-                        if not result:
-                            land_error_time = land_error_time + 1
-                        else:
+                        result = self.log_in.get_user(this_msg.sender, this_msg.content)
+                        if result:
+                            self.need_update = True
                             client_name = this_msg.sender
                             self.clients.append([client_socket, this_msg.sender])
+                        else:
+                            land_error_time = land_error_time + 1
                         print('{}时刻{}使用密码{}'.format(this_msg.time, this_msg.sender, this_msg.content))
                         client_socket.sendall(self.msg.en_code('password', client_name, str(result)))
                     elif this_msg.receiver == 'register':
@@ -53,18 +55,19 @@ class Server(object):
                         else:
                             print("register fail!")
                         client_socket.sendall(self.msg.en_code('register', client_name, str(result)))
-                    elif this_msg.receiver == 'friends':  # 请求好友列表
-                        print('{}请求好友列表'.format(this_msg.sender))
-                        # friends = self.friend_list.get_friends(this_msg.sender)
+                    else:  # 发送消息
                         friends = [itm[1] for itm in self.clients]
                         tmp_msg = '\r'
                         for friend in friends:
                             tmp_msg = tmp_msg + friend + '\r'
-                        client_socket.sendall(self.msg.en_code('friends', client_name, tmp_msg))
-                    else:  # 发送消息
+                        for client in self.clients:
+                            client_socket.sendall(self.msg.en_code('friends', client[1], tmp_msg))
+                            print('向{}发送在线人员信息'.format(client[1]))
+
                         print('{}时刻{}向{}发送{}'.format(this_msg.time, this_msg.sender,
                                                           this_msg.receiver, this_msg.content))
-                        self.chat_logs.insert_message(this_msg.sender, this_msg.receiver,this_msg.content,this_msg.time)
+                        self.chat_logs.insert_message(this_msg.sender, this_msg.receiver, this_msg.content,
+                                                      this_msg.time)
                         self.chat_logs = ChatLogs('chat_logs.csv')
                         if this_msg.receiver == '0':  # 群发消息
                             for client in self.clients:
