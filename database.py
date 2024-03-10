@@ -56,6 +56,15 @@ class User_info:
             else:
                 return False
 
+    def name_check(self,user_id):
+        user_id = eval(user_id)
+        user = self.df[self.df['User_ID'] == user_id]
+        return user["User_Name"].tolist()
+
+    def id_check(self, user_name):
+        user = self.df[self.df['User_Name'] == user_name]
+        return user["User_ID"].tolist()
+
 
     def ID_check(self,user_id):
         user_id = eval(user_id)
@@ -102,16 +111,18 @@ class Friend_list:
 
 if __name__ == '__main__':
     chat_logs = ChatLogs('chat_logs.csv')
-    # user_info = User_info('user_info.csv')
-    # friend_list = Friend_list("friend_list.csv")
+    user_info = User_info('user_info.csv')
+    friend_list = Friend_list("friend_list.csv")
     # chat_logs.insert_message('1','1','213','4')
     # chat_logs.insert_message('1','1','213','4')
     # chat_logs.insert_message('1','1','213','4')
     # chat_logs.insert_message('123','234','213','4')
-    a=chat_logs.get_messages('123','123')
-    for i in range(10):
-        print(str(a[i][0]) + '(' + str(a[i][3]) + ')' + ':' + str(a[i][2]))
-    # list=a.tolist()
-    print(type(a))
-    print(type(a[0][0]))
+    # a=chat_logs.get_messages('123','123')
+    # for i in range(10):
+    #     print(str(a[i][0]) + '(' + str(a[i][3]) + ')' + ':' + str(a[i][2]))
+    # # list=a.tolist()
+    # print(type(a))
+    # print(type(a[0][0]))
     # print(list)
+    a = user_info.id_check("hr")
+    print(a[0])
