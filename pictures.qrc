@@ -2,6 +2,10 @@
   <qresource prefix="back">
     <file>UI/校徽.jpg</file>
   </qresource>
+  <qresource prefix="button">
+    <file>UI/buttom1.jpg</file>
+    <file>UI/button2.jpg</file>
+  </qresource>
   <qresource prefix="background">
     <file>UI/background3.jpg</file>
     <file>UI/background2.jpg</file>

@@ -1,15 +1,42 @@
-import sys
-from PyQt5.QtWidgets import QApplication,QMainWindow
-import log
+import re
+import time
 
+req="@123:你好"
+# 字符串前带上r标记，表示字符串中转义字符无效，是普通字符
+# result=re.findall(r"\W",s)
+# p=re.compile(r'[@](.*?)[:]', re.S)
+# p1=re.compile(r'[:](.*?)', re.S)
+# sendto=re.findall(p,s)
+# massage=s.split(':',1)[1]
+s=re.findall(r"\W",req)
+if s!=[]:
+    sym1 = re.findall(r"\W",req)[0]
+    sym2 = re.findall(r"\W",req)[1]
+else:
+    sym1=0
+    sym2=0
+Time = time.strftime("%H:%M:%S", time.localtime())
+if sym1 == '@' and (sym2==':' or sym2 == '：'):
+            # sendto =
+    if sym2==':':
+        p = re.compile(r'[@](.*?)[:]', re.S)
+        sendto = re.findall(p, req)[0]
+        reqs = '我 ' + '(私聊'+ str(sendto) +')' +'(' + str(Time) + ')' + ':' + req.split(':',1)[1]
+        print(sendto)
+        print(reqs)
+    elif sym2=="：":
+        p = re.compile(r'[@](.*?)[：]', re.S)
+        sendto = re.findall(p, req)[0]
+        reqs = '我 ' + '(私聊'+ str(sendto) +')' +'(' + str(Time) + ')' + ':' + req.split('：',1)[1]
+        print(sendto)
+        print(reqs)
+else:
+    sendto = 0
+    reqs = '我 ' + '(' + str(Time) + ')' + ':' + req
+    print(sendto)
+    print(reqs)
 
-if __name__ == "__main__":
-        app = QApplication(sys.argv)
-        # ui = log.Ui_Form()
-        mainWindow = QMainWindow()
-        ui2 = log.Ui_Form()
-        # 调用Ui_MainWindow类的setupUi，创建初始组件
-        ui2.setupUi(mainWindow)
-        mainWindow.show()
-        # 进入程序的主循环，并通过exit函数确保主循环安全结束
-        sys.exit(app.exec_())
+# print(result)
+# print(sendto)
+# print(massage)
+# print(massage[0])

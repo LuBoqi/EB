@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>938</width>
+    <width>910</width>
     <height>642</height>
    </rect>
   </property>
@@ -345,12 +345,40 @@ font: 75 12pt &quot;Agency FB&quot;;
 background-image: url(:/background/UI/background3.jpg);</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>79</x>
+      <y>440</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>清除</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>440</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>更新</string>
+    </property>
+   </widget>
    <zorder>textBrowser_2</zorder>
    <zorder>textBrowser</zorder>
    <zorder>frame_3</zorder>
    <zorder>textEdit</zorder>
    <zorder>pushButton_4</zorder>
    <zorder>listWidget</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>pushButton_2</zorder>
   </widget>
  </widget>
  <resources>
@@ -405,9 +433,43 @@ background-image: url(:/background/UI/background3.jpg);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form2</receiver>
+   <slot>clear_massage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>570</x>
+     <y>389</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>845</x>
+     <y>176</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>Form2</receiver>
+   <slot>load_massage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>503</x>
+     <y>404</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>888</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>min()</slot>
   <slot>send_massage()</slot>
+  <slot>load_massage()</slot>
+  <slot>clear_massage()</slot>
  </slots>
 </ui>

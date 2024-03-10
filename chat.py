@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form2(object):
     def setupUi(self, Form2):
         Form2.setObjectName("Form2")
-        Form2.resize(938, 642)
+        Form2.resize(910, 642)
         Form2.setStyleSheet("background-image: url(:/background/whitebackground.jpg);\n"
 "background-image: url(:/background/UI/whitebackground.jpg);")
         self.frame = QtWidgets.QFrame(Form2)
@@ -117,17 +117,27 @@ class Ui_Form2(object):
 "font: 75 12pt \"Agency FB\";\n"
 "background-image: url(:/background/UI/background3.jpg);")
         self.listWidget.setObjectName("listWidget")
+        self.pushButton = QtWidgets.QPushButton(self.frame)
+        self.pushButton.setGeometry(QtCore.QRect(79, 440, 51, 31))
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton_2 = QtWidgets.QPushButton(self.frame)
+        self.pushButton_2.setGeometry(QtCore.QRect(30, 440, 51, 31))
+        self.pushButton_2.setObjectName("pushButton_2")
         self.textBrowser_2.raise_()
         self.textBrowser.raise_()
         self.frame_3.raise_()
         self.textEdit.raise_()
         self.pushButton_4.raise_()
         self.listWidget.raise_()
+        self.pushButton.raise_()
+        self.pushButton_2.raise_()
 
         self.retranslateUi(Form2)
         self.pushButton_6.clicked.connect(Form2.close) # type: ignore
         self.pushButton_5.clicked.connect(Form2.showMinimized) # type: ignore
         self.pushButton_4.clicked.connect(Form2.send_massage) # type: ignore
+        self.pushButton.clicked.connect(Form2.clear_massage) # type: ignore
+        self.pushButton_2.clicked.connect(Form2.load_massage) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Form2)
 
     def retranslateUi(self, Form2):
@@ -146,4 +156,6 @@ class Ui_Form2(object):
         self.pushButton_5.setText(_translate("Form2", "-"))
         self.pushButton_6.setText(_translate("Form2", "X"))
         self.pushButton_4.setText(_translate("Form2", "发送"))
+        self.pushButton.setText(_translate("Form2", "清除"))
+        self.pushButton_2.setText(_translate("Form2", "更新"))
 import pictures_rc

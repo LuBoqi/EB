@@ -9,6 +9,7 @@ from client import Client
 import message
 import time
 from server import cmd
+from database import ChatLogs
 
 server_ip = '127.0.0.1'
 port = 8989
@@ -77,24 +78,30 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
     def __init__(self, client):
         super(Chat, self).__init__()
         self.setupUi(self)
-        self.load_massage()
+        # self.load_massage()
+        self.chatlogs = ChatLogs('chat_logs.csv')
         self.Client = client
         # self.recv_massage = Worker(self.Client.receive)
         # self.get_friends = Worker(self.Client.get_friends)
         # self.recv_massage.start()
         # self.get_friends.start()
+        self.load_massage()
         self.new_info()
 
+    def clear_massage(self):
+        self.textBrowser.clear()
+
     def load_massage(self):
+        box = QtWidgets.QMessageBox()
         # 加载数据库
-        #     list
-        # try:
-        # for i in range(10):
-        #     self.textBrowser.append(list[i,0] +'('+str(list[i,3])+')'+ ':' + list[i,2])
-        # expect:
-        #     box.warning(self, '提示', '更新失败')
-        #     self.close() 更新错误可直接关掉
-        pass
+        user_id = self.Client.id
+        list= self.chatlogs.get_messages(user_id,user_id)
+        try:
+            for i in range(10):
+                self.textBrowser.append(str(list[i][0]) + '(' + str(list[i][3]) + ')' + ':' + str(list[i][2]))
+        except:
+            box.warning(self, '提示', '更新失败')
+
 
     def new_info(self):
         self.listWidget.clear()
@@ -107,6 +114,8 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
             if self.Client.now_msg.time != last_time and self.Client.now_msg.sender not in cmd:
                 self.textBrowser.append(
                     self.Client.now_msg.sender + '(' + self.Client.now_msg.time + ')' + ':' + self.Client.now_msg.content)
+
+
                 last_time = self.Client.now_msg.time
 
     def receive(self):
@@ -114,17 +123,42 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
             self.Client.receive()
             if self.Client.now_msg.sender == 'friends':
                 self.new_info()
+
+
     def send_massage(self):
         try:
             req = self.textEdit.toPlainText()
-            if req:
-                Time = time.strftime("%H:%M:%S", time.localtime())
-                reqs = '我 ' + '(' + str(Time) + ')' + ':' + req
-                self.textBrowser.append(reqs)
-                self.Client.send(0, req)
-                self.textEdit.clear()
-                # 发送消息代码 write here
-        #         写入数据库聊天记录代码 write here
+            s = re.findall(r"\W", req)
+            if s != []:
+                sym1 = re.findall(r"\W", req)[0]
+                sym2 = re.findall(r"\W", req)[1]
+            else:
+                sym1 = 0
+                sym2 = 0
+            Time = time.strftime("%H:%M:%S", time.localtime())
+            if sym1 == '@' and (sym2==':' or sym2 == '：'):
+                # sendto =
+                if sym2==':':
+                    p = re.compile(r'[@](.*?)[:]', re.S)
+                    sendto = re.findall(p, req)[0]
+                    reqq= '(私聊)'+req.split(':',1)[1]
+                    reqs = '我 ' + '(私聊'+ str(sendto) +')' +'(' + str(Time) + ')' + ':' + req.split('：', 1)[1]
+                elif sym2=="：":
+                    p = re.compile(r'[@](.*?)[：]', re.S)
+                    sendto = re.findall(p, req)[0]
+                    reqq = '(私聊)'+ req.split('：', 1)[1]
+                    reqs = '我 ' + '(私聊'+ str(sendto) +')' +'(' + str(Time) + ')' + ':' + req.split('：', 1)[1]
+            else:
+                sendto = 0
+                reqq=req
+                reqs = '我 ' + '(' + str(Time) + ')' + ':' + reqq
+
+            # if req:
+            #     Time = time.strftime("%H:%M:%S", time.localtime())
+            #     reqs = '我 ' + '(' + str(Time) + ')' + ':' + req
+            self.textBrowser.append(reqs)
+            self.Client.send(sendto, reqq)
+            self.textEdit.clear()
 
         except Exception as e:
             print(e)
@@ -160,7 +194,6 @@ class Signup(QtWidgets.QMainWindow, Ui_Form3):
                 box.warning(self, "提示", "密码输入格式有误!")
             else:
                 user = dict()
-                # 需添加密码写入code    password=？？？
                 user['nick_name'] = nick_name
                 user['user_name'] = user_name
                 user['password'] = password

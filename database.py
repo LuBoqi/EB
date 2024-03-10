@@ -15,14 +15,14 @@ class ChatLogs:
         self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True, sort=False)
         self.df.to_csv(self.file_path, index=False)
 
-    def get_messages(self, sender_id=None, receiver_id=None):
+    def get_messages(self, sender_id: object = None, receiver_id: object = None) -> object:
         if sender_id!= None:
             sender_id = eval(sender_id)
         if receiver_id != None:
             receiver_id =eval(receiver_id)
         messages = self.df[(self.df['Sender_ID'] == sender_id) | (self.df['Receiver_ID']==sender_id) | (self.df['Receiver_ID']==0) | (self.df['Sender_ID']==receiver_id) | (self.df['Receiver_ID']==receiver_id)]
         messages = messages.values
-        return messages
+        return messages.tolist()
 
 
     def close_connection(self):
@@ -102,12 +102,16 @@ class Friend_list:
 
 if __name__ == '__main__':
     chat_logs = ChatLogs('chat_logs.csv')
-    user_info = User_info('user_info.csv')
-    friend_list = Friend_list("friend_list.csv")
-    chat_logs.insert_message('1','1','213','4')
-    chat_logs.insert_message('1','1','213','4')
-    chat_logs.insert_message('1','1','213','4')
-    chat_logs.insert_message('123','234','213','4')
-    chat_logs.get_messages('123','234')
-
-
+    # user_info = User_info('user_info.csv')
+    # friend_list = Friend_list("friend_list.csv")
+    # chat_logs.insert_message('1','1','213','4')
+    # chat_logs.insert_message('1','1','213','4')
+    # chat_logs.insert_message('1','1','213','4')
+    # chat_logs.insert_message('123','234','213','4')
+    a=chat_logs.get_messages('123','123')
+    for i in range(10):
+        print(str(a[i][0]) + '(' + str(a[i][3]) + ')' + ':' + str(a[i][2]))
+    # list=a.tolist()
+    print(type(a))
+    print(type(a[0][0]))
+    # print(list)
