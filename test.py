@@ -1,13 +1,13 @@
 import re
 import time
 
-req="@123:你好"
-result = re.findall(r'\W',req)
-print(result)
-p = re.compile(r'[@](.*?)[:]', re.S)
-result =re.findall(p,req)
-print(result)
-# 字符串前带上r标记，表示字符串中转义字符无效，是普通字符
+# req="@123:你好"
+# result = re.findall(r'\W',req)
+# print(result)
+# p = re.compile(r'[@](.*?)[:]', re.S)
+# result =re.findall(p,req)
+# print(result)
+# # 字符串前带上r标记，表示字符串中转义字符无效，是普通字符
 # result=re.findall(r"\W",s)
 # p=re.compile(r'[@](.*?)[:]', re.S)
 # p1=re.compile(r'[:](.*?)', re.S)

@@ -10,7 +10,7 @@ import message
 import time
 from server import cmd
 from database import ChatLogs,User_info
-server_ip = '127.0.0.1'
+server_ip = '127.0.0.2'
 port = 8989
 
 class Login(QtWidgets.QMainWindow, Ui_Form):
@@ -51,7 +51,6 @@ class Worker(QThread):
     def run(self):
         self.func()
 
-
 class Chat(QtWidgets.QMainWindow, Ui_Form2):
     def go(self):
         self.rec = Worker(self.receive)
@@ -61,25 +60,16 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
     def __init__(self, client):
         super(Chat, self).__init__()
         self.setupUi(self)
-        # self.load_massage()
         self.chatlogs = ChatLogs('chat_logs.csv')
-
         self.Client = client
-        # self.recv_massage = Worker(self.Client.receive)
-        # self.get_friends = Worker(self.Client.get_friends)
-        # self.recv_massage.start()
-        # self.get_friends.start()
         self.load_massage()
         self.new_info()
-
     def clear_massage(self):
         self.textBrowser.clear()
-
     def load_massage(self):
         box = QtWidgets.QMessageBox()
         user_info = User_info('user_info.csv')
         self.chatlogs = ChatLogs('chat_logs.csv')
-
         # 加载数据库
         user_id = self.Client.id
         list= self.chatlogs.get_messages(user_id,user_id)
@@ -87,7 +77,6 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
             print("历史聊天记录：{}条".format(len(list)))
             if len(list)<10:
                 j = len(list)
-
             else:
                 j = 10
                 list = list[-1::-1]
@@ -100,34 +89,25 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
                     self.textBrowser.append(user_info.name_check(str(list[i][0]))[0] + '(' + str(list[i][3]) + ')' + ':' + str(list[i][2]))
         except:
             box.warning(self, '提示', '更新失败')
-
-
     def new_info(self):
         user_info = User_info('user_info.csv')
         self.listWidget.clear()
         for i in self.Client.friends:
             nick_name = user_info.name_check(i)[0]
             self.listWidget.addItem(nick_name)
-
     def ui_refresh(self):
         user_info = User_info('user_info.csv')
         last_time = message.get_time_string()
         while True:
             if self.Client.now_msg.time != last_time and self.Client.now_msg.sender not in cmd:
-
                 self.textBrowser.append(
-                    user_info.name_check(self.Client.now_msg.sender)[0] + '(' + self.Client.now_msg.time + ')' + ':' + self.Client.now_msg.content)
-
-
+                    user_info.name_check(self.Client.now_msg.sender)[0]+ '(' + self.Client.now_msg.time + ')' + ':' + self.Client.now_msg.content)
                 last_time = self.Client.now_msg.time
-
     def receive(self):
         while True:
             self.Client.receive()
             if self.Client.now_msg.sender == 'friends':
                 self.new_info()
-
-
     def send_massage(self):
         user_info = User_info('user_info.csv')
         try:
@@ -147,33 +127,30 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
                     sendto = re.findall(p, req)[0]
                     reqq= '(私聊)'+req.split(':',1)[1]
                     reqs = '我 ' + '(私聊'+ str(sendto) +')' +'(' + str(Time) + ')' + ':' + req.split(':', 1)[1]
+                    sends = user_info.id_check(sendto)[0]
+
                 elif sym2=='：':
                     p = re.compile(r'[@](.*?)[：]', re.S)
                     sendto = re.findall(p, req)[0]
                     reqq = '(私聊)'+ req.split('：', 1)[1]
                     reqs = '我 ' + '(私聊'+ str(sendto) +')' +'(' + str(Time) + ')' + ':' + req.split('：', 1)[1]
+                    sends = user_info.id_check(sendto)[0]
+
             else:
-                sendto = 0
+                sends = 0
                 reqq=req
                 reqs = '我 ' + '(' + str(Time) + ')' + ':' + reqq
-
-            # if req:
-            #     Time = time.strftime("%H:%M:%S", time.localtime())
-            #     reqs = '我 ' + '(' + str(Time) + ')' + ':' + req
             self.textBrowser.append(reqs)
-            self.Client.send(user_info.id_check(sendto)[0],reqq)
+            self.Client.send(sends,reqq)
             self.textEdit.clear()
-
         except Exception as e:
             print(e)
-
 
 class Signup(QtWidgets.QMainWindow, Ui_Form3):
     def __init__(self):
         super(Signup, self).__init__()
         self.setupUi(self)
         self.client = Client(server_ip, port)
-
     def signup(self):
         try:
             box = QtWidgets.QMessageBox()
@@ -188,8 +165,6 @@ class Signup(QtWidgets.QMainWindow, Ui_Form3):
                 box.warning(self, '提示', '账号太长')
             elif len(user_name) == 0:
                 box.warning(self, '提示', '请输入账号')
-            # elif type(user_name)=='str':
-            #     box.warning(self, '提示', '账号不能有字母')
             elif len(password) > 12:
                 box.warning(self, '提示', '密码太长')
             elif len(password) == 0:
@@ -208,6 +183,5 @@ class Signup(QtWidgets.QMainWindow, Ui_Form3):
                     box.warning(self, "提示", "账号已存在")
         except:
             box.warning(self, '提示', '注册失败')
-
     def exit(self):
         self.close()
