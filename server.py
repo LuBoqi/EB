@@ -55,6 +55,8 @@ class Server(object):
                         else:
                             print("register fail!")
                         client_socket.sendall(self.msg.en_code('register', client_name, str(result)))
+                    elif this_msg.receiver == 'offline':
+                        self.clients = [client for client in self.clients if client[1] != this_msg.content]
                     else:  # 发送消息
                         friends = [itm[1] for itm in self.clients]
                         tmp_msg = '\r'
