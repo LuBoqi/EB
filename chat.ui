@@ -389,7 +389,7 @@ background-image: url(:/background/UI/background3.jpg);</string>
    <sender>pushButton_6</sender>
    <signal>clicked()</signal>
    <receiver>Form2</receiver>
-   <slot>close()</slot>
+   <slot>exit()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>765</x>
@@ -471,5 +471,6 @@ background-image: url(:/background/UI/background3.jpg);</string>
   <slot>send_massage()</slot>
   <slot>load_massage()</slot>
   <slot>clear_massage()</slot>
+  <slot>exit()</slot>
  </slots>
 </ui>

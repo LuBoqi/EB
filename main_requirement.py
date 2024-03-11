@@ -146,6 +146,11 @@ class Chat(QtWidgets.QMainWindow, Ui_Form2):
         except Exception as e:
             print(e)
 
+    def exit(self):
+        self.close()
+        self.client.close()
+
+
 class Signup(QtWidgets.QMainWindow, Ui_Form3):
     def __init__(self):
         super(Signup, self).__init__()

@@ -133,7 +133,7 @@ class Ui_Form2(object):
         self.pushButton_2.raise_()
 
         self.retranslateUi(Form2)
-        self.pushButton_6.clicked.connect(Form2.close) # type: ignore
+        self.pushButton_6.clicked.connect(Form2.exit) # type: ignore
         self.pushButton_5.clicked.connect(Form2.showMinimized) # type: ignore
         self.pushButton_4.clicked.connect(Form2.send_massage) # type: ignore
         self.pushButton.clicked.connect(Form2.clear_massage) # type: ignore
