@@ -104,5 +104,5 @@ class Server(object):
 
 
 if __name__ == '__main__':
-    server = Server('127.0.0.2', 8989)
+    server = Server('192.168.86.115', 8989)
     server.listen()

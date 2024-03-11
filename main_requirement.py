@@ -10,7 +10,7 @@ import message
 import time
 from server import cmd
 from database import ChatLogs,User_info
-server_ip = '127.0.0.2'
+server_ip = '192.168.86.115'
 port = 8989
 
 class Login(QtWidgets.QMainWindow, Ui_Form):
